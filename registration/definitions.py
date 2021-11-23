@@ -2,14 +2,14 @@ from enum import Enum
 
 
 class Gender(Enum):
-    Unset = (0, 'Unset', '未設定')
+    Unset = (0, 'Chose your gender', '請選擇你的性別')
     Male = (1, 'Male', '男性')
     Female = (2, 'Female', '女性')
     Privacy = (3, 'Privacy', '不公開')
 
 
 class Identity(Enum):
-    Unset = (0, 'Unset', '未設定')
+    Unset = (0, 'Chose your identity', '請選擇你的身份')
     Citizen = (1, 'Citizen', '公民')
     CivilServant = (2, 'Civil Servant', '公務員')
     Military = (3, 'Military', '軍職')
