@@ -10,28 +10,41 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.fields['username'] = forms.CharField(required=True,
-                                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                                  widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                         'border-0 border-bottom mb-3',
+                                                                                'placeholder': "Username"}))
         self.fields['password'] = forms.CharField(required=True,
                                                   widget=forms.TextInput(attrs={'type': 'password',
-                                                                                'class': 'form-control'}))
+                                                                                'class': 'form-control '
+                                                                                         'border-0 border-bottom mb-3',
+                                                                                'placeholder': "Password"}))
 
 
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields['username'] = forms.CharField(required=True,
-                                                  widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                                  widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                         'border-0 border-bottom mb-3',
+                                                                                'placeholder': "Username"}))
         self.fields['password1'] = forms.CharField(required=True,
-                                                   widget=forms.TextInput(attrs={'class': 'form-control',
+                                                   widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                          'border-0 border-bottom mb-3',
+                                                                                 'placeholder': "Password",
                                                                                  'type': 'password'}))
         self.fields['password2'] = forms.CharField(required=True,
-                                                   widget=forms.TextInput(attrs={'class': 'form-control',
+                                                   widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                          'border-0 border-bottom mb-3',
                                                                                  'type': 'password',
                                                                                  'placeholder': 'Password Confirmation'}))
         self.fields['phone'] = forms.CharField(required=True,
-                                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                               widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                      'border-0 border-bottom mb-3',
+                                                                             'placeholder': "Phone"}))
         self.fields['email'] = forms.CharField(required=True,
-                                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                               widget=forms.TextInput(attrs={'class': 'form-control '
+                                                                                      'border-0 border-bottom mb-3',
+                                                                             'placeholder': "Email"}))
 
     class Meta:
         model = User
@@ -79,11 +92,13 @@ class SuperuserProfileForm(UserChangeForm):
                                                      widget=forms.Select(attrs={'class': 'form-control border-0'}))
         self.fields['introduction'] = forms.CharField(required=False,
                                                       widget=forms.Textarea(attrs={'class': 'form-control border-0',
-                                                                                   'placeholder': "Write something about you"}))
+                                                                                   'placeholder':
+                                                                                       "Write something about you"}))
 
     class Meta:
         model = User
-        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender', 'privilege', 'introduction']
+        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender',
+                  'privilege', 'introduction']
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -123,11 +138,13 @@ class ProfileForm(UserChangeForm):
                                                     widget=forms.Select(attrs={'class': 'form-control border-0'}))
         self.fields['introduction'] = forms.CharField(required=False,
                                                       widget=forms.Textarea(attrs={'class': 'form-control border-0',
-                                                                                   'placeholder': "Write something about you"}))
+                                                                                   'placeholder':
+                                                                                       "Write something about you"}))
 
     class Meta:
         model = User
-        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender', 'introduction']
+        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender',
+                  'introduction']
 
     def save(self, commit=True):
         user = super().save(commit=False)
