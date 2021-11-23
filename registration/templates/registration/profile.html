@@ -10,7 +10,7 @@
     {% csrf_token %}
     <div class="container" xmlns="http://www.w3.org/1999/html">
         <div class="row justify-content-center">
-            <div class="rounded-3 bg-dark text-light p-3">
+            <div class="col-10 rounded-3 bg-dark text-light p-3 mb-4">
                 <p class="h1 fw-light align-middle">{{ user.username }}</p>
                 <p class="text-muted">
                     Join：{{ user.date_joined }}</br>
@@ -86,7 +86,7 @@
             </div>
 
             <!--User status-->
-            <div class="col-12 col-md-5 col-xl-3 rounded-3 m-1 bg-white shadow p-3 bg-body rounded">
+            <div class="col-12 col-md-10 col-xl-3 rounded-3 m-1 bg-white shadow p-3 bg-body rounded">
                 <h3 class="fw-light align-middle">Status</h3>
                 <p>
                     Active
