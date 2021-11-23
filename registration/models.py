@@ -6,7 +6,7 @@ from registration.definitions import Gender, Identity, Privilege
 
 
 class User(AbstractUser):
-    ID_Number = models.CharField(max_length=10, unique=True)
+    ID_Number = models.CharField(max_length=10, unique=True, null=True, blank=False)
     gender = models.PositiveSmallIntegerField(default=Gender.Unset.value[0])
     identity = models.PositiveSmallIntegerField(default=Identity.Unset.value[0])
     privilege = models.PositiveSmallIntegerField(default=Privilege.User.value[0])
