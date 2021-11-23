@@ -1,0 +1,24 @@
+<button type="button" class="btn" data-toggle="modal" data-target="#UserModalCenter">
+    {{ request.user.username }}<i class="bi bi-caret-down-fill"></i>
+</button>
+
+<div class="modal fade" id="UserModalCenter" tabindex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-secondary">
+            <div class="modal-header text-center" style="width: 100%">
+                <h5 class="modal-title" id="ModalLongTitle">{{ request.user.username }}</h5>
+            </div>
+
+            <div id="modal-menu" style="width: 100%">
+                <ul class="list-inline">
+                    <li class="p-3" style="cursor: pointer" onclick="window.location.href='#profile'">Profile</li>
+                </ul>
+            </div>
+
+            <div class="modal-footer" style="width: 100%">
+                <a class="btn btn-primary" href="{% url 'logout' %}" onclick="return confirm('Sure to logout?')">Logout</a>
+                <a class="btn btn-secondary" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

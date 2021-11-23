@@ -1,0 +1,33 @@
+{% load static %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light navbar-laravel shadow mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'index' %}">海巡署資訊網站</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Navbar-->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto text-center">
+                    {% if user.is_authenticated %}
+                        {% include 'user_features.html' %}
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#register">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<style type="text/css">
+    header nav{
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+    }
+</style>

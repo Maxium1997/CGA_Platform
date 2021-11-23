@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+{% include 'head.html' %}
+
+{% include 'header.html' %}
+
+<title>
+    {% block title %}
+    {% block subtitle %}
+    {% endblock %}・CGA Platform
+    {% endblock %}
+</title>
+
+<body>
+    {% block body %}
+    {% endblock %}
+
+    {% include 'messages.html' %}
+</body>
+
+{% include 'footer.html' %}
+</html>
