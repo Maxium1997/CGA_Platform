@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load static %}
 
-</body>
-</html>
+{% block title %}
+400
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 text-center">
+            <img src="{% static 'pic/400.jpg' %}" width="100%">
+            <h1>
+                400 Bad Request
+            </h1>
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'index' %}'">OK</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

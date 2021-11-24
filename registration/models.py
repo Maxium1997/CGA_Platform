@@ -19,5 +19,3 @@ class User(AbstractUser):
     updated_time = models.DateTimeField(auto_now=True)
     introduction = models.TextField()
 
-    def has_perm(self, require_privilege: Privilege, obj=None):
-        return (self.privilege & require_privilege.value[0]) > 0

@@ -9,7 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 from datetime import date
+import base64
 
+from CGA_Platform.email import sent_confirmation_email_to
 from registration.models import User
 from registration.forms import LoginForm, RegisterForm, \
     SuperuserProfileForm, ProfileForm
@@ -36,9 +38,14 @@ class Register(CreateView):
     form_class = RegisterForm
 
     def form_valid(self, form):
-        user = form.save()
-        auth.login(self.request, user)
-        return super(Register, self).form_valid(form)
+        # To check out the username whether contains characters other than English letters or numbers
+        if not form.cleaned_data['username'].encode('utf-8').isalnum():
+            messages.warning(self.request, "Username invalid. Only accept letters and numbers.")
+            return super(Register, self).form_invalid(form)
+        else:
+            user = form.save()
+            auth.login(self.request, user)
+            return super(Register, self).form_valid(form)
 
     def get_success_url(self):
         return reverse_lazy('index')
@@ -66,13 +73,16 @@ class Profile(UpdateView):
             return ProfileForm
 
     def form_valid(self, form):
-        if form.instance.birthday is not None and form.instance.birthday > date.today():
+        if form.instance.birthday is not None and form.cleaned_data['birthday'] > date.today():
             messages.error(self.request, "Your birthday is in the future, maybe this date you hadn't born.")
             return self.form_invalid(form)
         else:
             if form.instance.ID_Number == "":
                 form.instance.ID_Number = None
-                form.save()
+            if self.request.user.email_is_verify and form.cleaned_data['email'] != self.request.user.email:
+                messages.warning(self.request,
+                                 "Email changed.{} to {}".format(self.request.user.email, form.cleaned_data['email']))
+            form.save()
             messages.success(self.request, "Updated successfully.")
             return super(Profile, self).form_valid(form)
 
@@ -83,4 +93,45 @@ class Profile(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(Profile, self).get_context_data(**kwargs)
         context['user'] = self.get_object()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class EmailConfirm(TemplateView):
+    template_name = 'email/confirm.html'
+
+
+@method_decorator(login_required, name='dispatch')
+class EmailConfirmSent(TemplateView):
+    template_name = 'email/confirm_sent.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        sent_confirmation_email_to(user=self.request.user)
+        messages.success(request, "Email sent successfully.")
+        return super(EmailConfirmSent, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(login_required, name='dispatch')
+class EmailConfirmDone(TemplateView):
+    template_name = 'email/confirm_done.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        base64_bytes_encoded_username = bytes(kwargs.get('username'), 'utf-8')
+        encoded_username = base64.b64decode(base64_bytes_encoded_username)
+        username = encoded_username.decode('utf-8')
+        confirmed_user = User.objects.get(username=username)
+
+        if confirmed_user != self.request.user:
+            raise PermissionDenied
+        elif confirmed_user.email_is_verify:
+            messages.warning(self.request, "Email confirmed.")
+            return reverse_lazy('index')
+        else:
+            confirmed_user.email_is_verify = True
+            confirmed_user.save()
+            return super(EmailConfirmDone, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(EmailConfirmDone, self).get_context_data(**kwargs)
+        context['tmp'] = kwargs.get('username')
         return context

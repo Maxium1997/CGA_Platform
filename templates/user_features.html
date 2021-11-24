@@ -11,6 +11,11 @@
             </div>
 
             <div id="user-modal-menu" style="width: 100%">
+                {% if request.user.is_superuser %}
+                <ul class="list-inline">
+                    <li class="p-3" style="cursor: pointer" onclick="window.location.href='/admin/'">Admin</li>
+                </ul>
+                {% endif %}
                 <ul class="list-inline">
                     <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'profile' request.user.username %}'">Profile</li>
                 </ul>

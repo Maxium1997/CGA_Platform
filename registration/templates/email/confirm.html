@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Confirm Email
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10 col-xs-12 text-center">
+            <img src="{% static 'pic/mail.jpg' %}" width="100%">
+            <h1>
+                Confirm Email.
+            </h1>
+            <p class="text-muted">
+                Email: {{ request.user.email }}
+            </p>
+            <a href="{% url 'email_confirm_sent' %}" class="btn btn-primary">OK</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
