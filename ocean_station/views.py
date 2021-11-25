@@ -37,14 +37,15 @@ class StationInfoView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StationInfoView, self).get_context_data(**kwargs)
-        context['overview'] = self.get_object().\
-            introductions.get(content_flag=ContentFlag.Overview.value[0]).description
-        context['contents'] = self.get_object().\
-            introductions.filter(content_flag=ContentFlag.Content.value[0]).order_by('sequence', 'id')
-        context['traffic_info'] = self.get_object().\
-            introductions.get(content_flag=ContentFlag.TrafficInfo.value[0]).description
-        context['cautions'] = self.get_object().\
-            introductions.get(content_flag=ContentFlag.Cautions.value[0]).description
+        if self.get_object().introductions.all() is not None:
+            context['overview'] = self.get_object().\
+                introductions.get(content_flag=ContentFlag.Overview.value[0]).description
+            context['contents'] = self.get_object().\
+                introductions.filter(content_flag=ContentFlag.Content.value[0]).order_by('sequence', 'id')
+            context['traffic_info'] = self.get_object().\
+                introductions.get(content_flag=ContentFlag.TrafficInfo.value[0]).description
+            context['cautions'] = self.get_object().\
+                introductions.get(content_flag=ContentFlag.Cautions.value[0]).description
         context['region_stations'] = Station.objects.filter(region=self.get_object().region)
         return context
 
