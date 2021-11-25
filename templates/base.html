@@ -14,10 +14,10 @@
 </title>
 
 <body style="background-color: #F8F8FF;">
-    {% block body %}
-    {% endblock %}
+{% include 'messages.html' %}
 
-    {% include 'messages.html' %}
+{% block body %}
+{% endblock %}
 </body>
 
 {% include 'footer.html' %}

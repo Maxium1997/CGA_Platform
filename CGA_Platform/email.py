@@ -31,7 +31,7 @@ def sent_confirmation_email_to(user: User):
                    "Please press the following link below to confirm your email address." + \
                    "This means you will be able to have a full experience in our website, " + \
                    "or if you forget your password, it can help you to reset it.\n\n" + \
-                   "127.0.0.1:8000/accounts/confirm_email/{}\n\n".format(str_base64_bytes_encoded_username) + \
+                   "http://cgaplatform.pythonanywhere.com/accounts/confirm_email/{}\n\n".format(str_base64_bytes_encoded_username) + \
                    "Note: If you can't click the link from your email program, " \
                    "you also can copy the URL and paste it into your web browser.\n\n" + \
                    "If you don't want to use CGA Platform, just ignore this message.\n\n" + \
