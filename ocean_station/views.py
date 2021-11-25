@@ -12,15 +12,15 @@ class OceanStationsView(ListView):
     template_name = 'ocean_station/all.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(IndexView, self).get_context_data(object_list=None, **kwargs)
+        context = super(OceanStationsView, self).get_context_data(object_list=None, **kwargs)
         context['stations'] = Station.objects.order_by('region')
-        context['regions'] = Region.__members__.values()
+        context['regions'] = [[_.value[1], _.value[2]] for _ in Region.__members__.values()][1:]
         return context
 
 
-class RegionStationsView():
+class RegionStationsView(ListView):
     pass
 
 
-class StationInfoView():
+class StationInfoView(DetailView):
     pass

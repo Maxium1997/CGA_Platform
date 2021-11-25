@@ -22,7 +22,9 @@ class TaggedAttraction(TaggedItem):
 
 
 class Content(TextItem):
-    content_flag = models.PositiveSmallIntegerField(default=ContentFlag.Content.value[0])
+    CONTENT_FLAG_CHOICES = [(_.value[0], _.value[1]) for _ in ContentFlag.__members__.values()]
+    content_flag = models.PositiveSmallIntegerField(default=ContentFlag.Content.value[0],
+                                                    choices=CONTENT_FLAG_CHOICES)
 
     def __str__(self):
         return self.description[:30]
@@ -33,10 +35,14 @@ class Station(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     manager = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)     # 管理員
-    region = models.PositiveIntegerField(default=Region.Unset.value[0])         # 地區
+
+    REGION_CHOICES = [(_.value[0], _.value[1]) for _ in Region.__members__.values()]
+    region = models.PositiveIntegerField(default=Region.Unset.value[0],
+                                         choices=REGION_CHOICES)                # 地區
+
     address = models.CharField(max_length=255)                                  # 地址
     coordinate = models.CharField(max_length=22, null=True, blank=True)         # 座標
-    contact = models.CharField(max_length=255)                                  # 聯絡電話
+    contact_phone = models.CharField(max_length=255)                            # 聯絡電話
     fans_page_url = models.URLField(null=True, blank=True)                      # 粉絲專頁網址
     attractions = GenericRelation(TaggedAttraction)                             # 景點
     introductions = GenericRelation(Content)
