@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load station_filter %}
+
+{% block title %}
+Ocean Station
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <img src="{{ station.images.url }}" width="100%">
+        </div>
+        {% if overview %}
+        <div class="col-lg-4 h5 fw-light">
+            <p>
+                {{ overview|linebreaks|safe }}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-12 table-responsive">
+            <table class="table table-striped align-middle">
+                <tbody>
+                    <tr>
+                        <td class="col-2">Address</td>
+                        <td class="col-10">{{ station.address }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-2">Coordinate</td>
+                        <td class="col-10">{{ station.coordinate }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-2">Contact Phone</td>
+                        <td class="col-10">{{ station.contact_phone }}</td>
+                    </tr>
+                    {% if station.attractions.all %}
+                    <tr>
+                        <td class="col-2">Attractions</td>
+                        <td class="col-10">
+                            {% for attraction in station.attractions.all %}
+                            <span class="badge rounded-pill bg-primary">#{{ attraction }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td class="col-2">Fans Page/Website</td>
+                        <td class="col-10"><a href="{{ station.fans_page_url }}">{{ station.fans_page_url }}</a></td>
+                    </tr>
+                    {% if traffic_info %}
+                    <tr>
+                        <td class="col-2">Traffic</td>
+                        <td class="col-10">{{ traffic_info|linebreaks|safe }}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if contents %}
+    <div class="row">
+        <div>
+            {% for content in contents %}
+            <p>{{ content.description|linebreaks|safe }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    {% if cautions %}
+    <div class="row border-top pt-2">
+        <h3>Cautions</h3>
+        <p>
+            {{ cautions|linebreaks|safe }}
+        </p>
+    </div>
+    {% endif %}
+
+    {% if region_stations %}
+    <div class="row border-top pt-2">
+        <h3>{{ station.region|readable_region:1 }} Others</h3>
+        {% for station in region_stations %}
+        <div class="col-lg-3 col-md-4 col-sm-6" onclick="window.location.href='{% url 'station_info' station.slug %}'">
+            <img src="{{ station.images.url }}" width="100%">
+            <p>{{ station.name }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

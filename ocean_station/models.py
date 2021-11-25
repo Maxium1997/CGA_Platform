@@ -25,6 +25,7 @@ class Content(TextItem):
     CONTENT_FLAG_CHOICES = [(_.value[0], _.value[1]) for _ in ContentFlag.__members__.values()]
     content_flag = models.PositiveSmallIntegerField(default=ContentFlag.Content.value[0],
                                                     choices=CONTENT_FLAG_CHOICES)
+    sequence = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.description[:30]

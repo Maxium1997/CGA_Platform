@@ -16,4 +16,5 @@ class TaggedAttractionAdmin(admin.ModelAdmin):
 
 @admin.register(Content)
 class ContentAdmin(admin.ModelAdmin):
-    list_display = ['content_object', 'content_type', 'object_id', 'content_flag']
+    list_display = ['content_object', 'content_flag', 'sequence', 'content_type', 'object_id']
+    ordering = ('content_type', 'object_id', 'content_flag', 'sequence', 'id')
