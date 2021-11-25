@@ -80,8 +80,8 @@ class Profile(UpdateView):
             if form.instance.ID_Number == "":
                 form.instance.ID_Number = None
             if self.request.user.email_is_verify and form.cleaned_data['email'] != self.request.user.email:
-                messages.warning(self.request,
-                                 "Email changed.{} to {}".format(self.request.user.email, form.cleaned_data['email']))
+                form.instance.email_is_verify = False
+                messages.warning(self.request, "Email changed, please reconfirm again.")
             form.save()
             messages.success(self.request, "Updated successfully.")
             return super(Profile, self).form_valid(form)

@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'registration',
+    'multi_relation',
+    'ocean_station',
 ]
 
 MIDDLEWARE = [
