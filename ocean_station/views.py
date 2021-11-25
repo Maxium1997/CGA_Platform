@@ -37,7 +37,7 @@ class StationInfoView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StationInfoView, self).get_context_data(**kwargs)
-        if self.get_object().introductions.all() is not None:
+        if self.get_object().introductions.count() != 0:
             context['overview'] = self.get_object().\
                 introductions.get(content_flag=ContentFlag.Overview.value[0]).description
             context['contents'] = self.get_object().\
