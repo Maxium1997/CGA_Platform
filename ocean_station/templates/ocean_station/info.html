@@ -10,10 +10,10 @@ Ocean Station
 <div class="container">
     <div class="row justify-content-center align-items-center">
         <div class="col-md-6">
-            {% if station.images %}
-            <img src="{{ station.images.url }}" width="100%">
+            {% if station.get_main_photo %}
+            <img src="{{ station.get_main_photo.path.url }}" width="100%" alt="{{ station.name }}">
             {% else %}
-            <img src="{% static 'pic/image-not-found.png' %}" width="100%">
+            <img src="{% static 'pic/image-not-found.png' %}" width="100%" alt="Image not found">
             {% endif %}
         </div>
         {% if overview %}
@@ -27,24 +27,24 @@ Ocean Station
 
     <div class="row">
         <div class="col-12 table-responsive">
-            <table class="table table-striped align-middle">
+            <table class="table table-striped">
                 <tbody>
                     <tr>
-                        <td class="col-2">Address</td>
-                        <td class="col-10">{{ station.address }}</td>
+                        <td class="col-2 align-middle">Address</td>
+                        <td class="col-10 align-middle">{{ station.address }}</td>
                     </tr>
                     <tr>
-                        <td class="col-2">Coordinate</td>
-                        <td class="col-10">{{ station.coordinate }}</td>
+                        <td class="col-2 align-middle">Coordinate</td>
+                        <td class="col-10 align-middle">{{ station.coordinate }}</td>
                     </tr>
                     <tr>
-                        <td class="col-2">Contact Phone</td>
-                        <td class="col-10">{{ station.contact_phone }}</td>
+                        <td class="col-2 align-middle">Contact Phone</td>
+                        <td class="col-10 align-middle">{{ station.contact_phone }}</td>
                     </tr>
                     {% if station.attractions.all %}
                     <tr>
-                        <td class="col-2">Attractions</td>
-                        <td class="col-10">
+                        <td class="col-2 align-middle">Attractions</td>
+                        <td class="col-10 align-middle">
                             {% for attraction in station.attractions.all %}
                             <span class="badge rounded-pill bg-primary">#{{ attraction }}</span>
                             {% endfor %}
@@ -93,7 +93,11 @@ Ocean Station
                 {% for station in region_stations %}
                 {% if forloop.counter == 1 %}
                 <div class="carousel-item active">
-                    <img src="{{ station.images.url }}" class="d-block w-100" width="100%" alt="{{ station.name }}">
+                    {% if station.get_main_photo %}
+                    <img src="{{ station.get_main_photo.path.url }}" width="100%" alt="{{ station.name }}">
+                    {% else %}
+                    <img src="{% static 'pic/image-not-found.png' %}" width="100%" alt="Image not found">
+                    {% endif %}
                     <div>
                         <p>
                             <a href="{% url 'station_info' station.slug %}" class="h5 fw-light">{{ station.name }}</a>
@@ -103,7 +107,11 @@ Ocean Station
                 </div>
                 {% else %}
                 <div class="carousel-item">
-                    <img src="{{ station.images.url }}" class="d-block w-100" width="100%" alt="{{ station.name }}">
+                    {% if station.get_main_photo %}
+                    <img src="{{ station.get_main_photo.path.url }}" width="100%" alt="{{ station.name }}">
+                    {% else %}
+                    <img src="{% static 'pic/image-not-found.png' %}" width="100%" alt="Image not found">
+                    {% endif %}
                     <div>
                         <p>
                             <a href="{% url 'station_info' station.slug %}" class="h5 fw-light">{{ station.name }}</a>

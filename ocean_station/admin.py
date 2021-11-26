@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from ocean_station.models import Station, TaggedAttraction, Content
+from ocean_station.models import Station, TaggedAttraction, Content, Photo
 # Register your models here.
 
 
@@ -18,3 +18,9 @@ class TaggedAttractionAdmin(admin.ModelAdmin):
 class ContentAdmin(admin.ModelAdmin):
     list_display = ['content_object', 'content_flag', 'sequence', 'content_type', 'object_id']
     ordering = ('content_type', 'object_id', 'content_flag', 'sequence', 'id')
+
+
+@admin.register(Photo)
+class PhotoAdmin(admin.ModelAdmin):
+    list_display = ['content_object', 'photo_flag', 'content_type', 'object_id']
+    ordering = ('content_type', 'object_id', 'photo_flag', 'id')
