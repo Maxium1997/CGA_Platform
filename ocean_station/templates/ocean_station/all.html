@@ -20,8 +20,8 @@ Ocean Station
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-lg-4 col-md-12">
-                        {% if station.images %}
-                        <img src="{{ station.images.url }}" width="100%" alt="{{ station.name }}">
+                        {% if station.get_main_photo %}
+                        <img src="{{ station.get_main_photo.path.url }}" width="100%" alt="{{ station.name }}">
                         {% else %}
                         <img src="{% static 'pic/image-not-found.png' %}" width="100%" alt="Image not found">
                         {% endif %}
