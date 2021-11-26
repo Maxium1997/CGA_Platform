@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
+from django.core.exceptions import ObjectDoesNotExist
 
 from ocean_station.models import Station
 from ocean_station.definitions import Region, ContentFlag
@@ -37,16 +38,30 @@ class StationInfoView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StationInfoView, self).get_context_data(**kwargs)
-        if self.get_object().introductions.count() != 0:
+        try:
             context['overview'] = self.get_object().\
                 introductions.get(content_flag=ContentFlag.Overview.value[0]).description
+        except ObjectDoesNotExist:
+            context['overview'] = None
+        try:
             context['contents'] = self.get_object().\
                 introductions.filter(content_flag=ContentFlag.Content.value[0]).order_by('sequence', 'id')
+        except ObjectDoesNotExist:
+            context['contents'] = None
+        try:
             context['traffic_info'] = self.get_object().\
                 introductions.get(content_flag=ContentFlag.TrafficInfo.value[0]).description
+        except ObjectDoesNotExist:
+            context['traffic_info'] = None
+        try:
             context['cautions'] = self.get_object().\
                 introductions.get(content_flag=ContentFlag.Cautions.value[0]).description
-        context['region_stations'] = Station.objects.filter(region=self.get_object().region)
+        except ObjectDoesNotExist:
+            context['cautions'] = None
+        try:
+            context['region_stations'] = Station.objects.filter(region=self.get_object().region)
+        except ObjectDoesNotExist:
+            context['region_stations'] = None
         return context
 
     def get_object(self, queryset=None):

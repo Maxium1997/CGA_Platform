@@ -8,8 +8,8 @@ Ocean Station
 
 {% block body %}
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-6">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
             {% if station.images %}
             <img src="{{ station.images.url }}" width="100%">
             {% else %}
@@ -17,7 +17,7 @@ Ocean Station
             {% endif %}
         </div>
         {% if overview %}
-        <div class="col-lg-4 h5 fw-light">
+        <div class="col-md-6 h5 fw-light">
             <p>
                 {{ overview|linebreaks|safe }}
             </p>

@@ -16,7 +16,7 @@ Ocean Station
         </div>
 
         {% for station in stations %}
-        <div class="col-lg-12 col-md-6">
+        <div class="col-lg-12 col-sm-6 mb-1">
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-lg-4 col-md-12">
@@ -31,7 +31,7 @@ Ocean Station
                         <p class="text-muted">{{ station.address }}</p>
                         <p>
                             <button class="btn btn-primary" onclick="window.open('{{ station.fans_page_url }}');">Website</button>
-                            <a class="btn btn-info" href="{% url 'station_info' station.slug %}">More info</a>
+                            <a class="btn btn-info" href="{% url 'station_info' station.slug %}">Info</a>
                         </p>
                     </div>
                 </div>
