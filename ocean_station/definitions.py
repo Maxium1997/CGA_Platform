@@ -24,3 +24,5 @@ class PhotoFlag(Enum):
     Main = (1, 'Main', '主要')
     Display = (2, 'Display', '顯示')
     Poster = (3, 'Poster', '海報、標語')
+    Activity = (4, 'Activity', '活動')
+    Publicity = (5, 'Publicity', '宣傳')

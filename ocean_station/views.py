@@ -72,7 +72,9 @@ class StationInfoView(DetailView):
         except ObjectDoesNotExist:
             context['others'] = None
         try:
-            context['region_stations'] = Station.objects.filter(region=self.get_object().region)
+            context['region_stations'] = Station.objects.\
+                filter(region=self.get_object().region).\
+                exclude(slug=self.get_object().slug)
         except ObjectDoesNotExist:
             context['region_stations'] = None
         return context

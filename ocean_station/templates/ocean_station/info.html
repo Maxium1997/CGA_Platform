@@ -141,7 +141,7 @@ Ocean Station
     {% if region_stations %}
     <div class="row justify-content-center border-top pt-2">
         <h3>{{ station.region|readable_region:1 }} Others</h3>
-        <div id="carouselExampleControlsNoTouching" class="col-lg-6 col-md-8 col-sm-10 carousel slide" data-bs-touch="false" data-bs-interval="false">
+        <div id="carouselExampleControlsNoTouching" class="col-lg-4 col-md-6 col-8 carousel slide" data-bs-touch="false" data-bs-interval="false">
             <div class="carousel-inner">
                 {% for station in region_stations %}
                 {% if forloop.counter == 1 %}
