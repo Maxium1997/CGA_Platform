@@ -17,8 +17,10 @@ class ContentFlag(Enum):
     Explanation = (5, 'Explanation', '說明')
     TrafficInfo = (6, 'Traffic Information', '交通資訊')
     Cautions = (7, 'Cautions', '注意事項')
+    Other = (8, 'Other', '其他')
 
 
 class PhotoFlag(Enum):
     Main = (1, 'Main', '主要')
     Display = (2, 'Display', '顯示')
+    Poster = (3, 'Poster', '海報、標語')

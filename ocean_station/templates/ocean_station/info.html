@@ -56,11 +56,11 @@ Ocean Station
             </div>
             {% endif %}
         </div>
-        {% if overview %}
+        {% if overviews %}
         <div class="col-md-6 h5 fw-light">
-            <p>
-                {{ overview|linebreaks|safe }}
-            </p>
+            {% for overview in overviews %}
+            <p>{{ overview.description|linebreaks|safe }}</p>
+            {% endfor %}
         </div>
         {% endif %}
     </div>
@@ -86,7 +86,7 @@ Ocean Station
                         <td class="col-2 align-middle">Attractions</td>
                         <td class="col-10 align-middle">
                             {% for attraction in station.attractions.all %}
-                            <span class="badge rounded-pill bg-primary">#{{ attraction }}</span>
+                            <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                             {% endfor %}
                         </td>
                     </tr>
@@ -98,7 +98,11 @@ Ocean Station
                     {% if traffic_info %}
                     <tr>
                         <td class="col-2">Traffic</td>
-                        <td class="col-10">{{ traffic_info|linebreaks|safe }}</td>
+                        <td class="col-10">
+                            {% for info in traffic_info %}
+                            <p>{{ info.description|linebreaks|safe }}</p>
+                            {% endfor %}
+                        </td>
                     </tr>
                     {% endif %}
                 </tbody>
@@ -119,9 +123,18 @@ Ocean Station
     {% if cautions %}
     <div class="row border-top pt-2">
         <h3>Cautions</h3>
-        <p>
-            {{ cautions|linebreaks|safe }}
-        </p>
+        {% for caution in cautions %}
+        <p>{{ caution.description|linebreaks|safe }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if others %}
+    <div class="row border-top pt-2">
+        <h3>Others</h3>
+        {% for other in others %}
+        <p>{{ other.description|linebreaks|safe }}</p>
+        {% endfor %}
     </div>
     {% endif %}
 
