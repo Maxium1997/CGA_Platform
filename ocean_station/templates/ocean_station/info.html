@@ -86,7 +86,7 @@ Ocean Station
                         <td class="col-2 align-middle">Attractions</td>
                         <td class="col-10 align-middle">
                             {% for attraction in station.attractions.all %}
-                            <span class="badge rounded-pill bg-primary">#{{ attraction }}</span>
+                            <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                             {% endfor %}
                         </td>
                     </tr>
@@ -125,6 +125,15 @@ Ocean Station
         <h3>Cautions</h3>
         {% for caution in cautions %}
         <p>{{ caution.description|linebreaks|safe }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if others %}
+    <div class="row border-top pt-2">
+        <h3>Others</h3>
+        {% for other in others %}
+        <p>{{ other.description|linebreaks|safe }}</p>
         {% endfor %}
     </div>
     {% endif %}
