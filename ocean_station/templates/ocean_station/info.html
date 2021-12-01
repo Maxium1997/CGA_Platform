@@ -6,6 +6,11 @@
 Ocean Station
 {% endblock %}
 
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'region_stations' station.region|readable_region:1 %}">Ocean Station</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ station }}</li>
+{% endblock %}
+
 {% block body %}
 <div class="container">
     <div class="row justify-content-center align-items-center">

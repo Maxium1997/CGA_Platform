@@ -5,6 +5,15 @@
 Ocean Station
 {% endblock %}
 
+{% block breadcrumb %}
+{% for region in regions %}
+{% if region.0 == region_code %}
+<li class="breadcrumb-item active" aria-current="page">Ocean Station({{ region.1 }})</li>
+{% endif %}
+{% endfor %}
+
+{% endblock %}
+
 {% block body %}
 <div class="container">
     <div class="row">
