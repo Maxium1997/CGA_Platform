@@ -1,11 +1,18 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, UpdateView
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
+from django.contrib import messages
+
 
 from django.db.models import Q
 
 from ocean_station.models import Station
 from ocean_station.definitions import Region, ContentFlag, PhotoFlag
+from ocean_station.forms import StationUpdateForm
 
 # Create your views here.
 
@@ -83,3 +90,27 @@ class StationInfoView(DetailView):
         slug = self.kwargs.get('slug')
         station = Station.objects.get(slug=slug)
         return station
+
+
+@method_decorator(login_required, name='dispatch')
+class StationUpdateView(UpdateView):
+    model = Station
+    template_name = 'ocean_station/manager/update.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user == self.get_object().manager or request.user.is_superuser:
+            return super(StationUpdateView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_form_class(self):
+        return StationUpdateForm
+
+    def form_valid(self, form):
+        messages.success(self.request, "Updated successfully.")
+        return super(StationUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        station = self.get_object()
+        region = [_.value[1] for _ in Region.__members__.values()]
+        return reverse_lazy('station_update', kwargs={'slug': station.slug})

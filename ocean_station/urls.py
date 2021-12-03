@@ -1,6 +1,7 @@
 from django.urls import path, include
 
-from ocean_station.views import OceanStationsView, RegionStationsView, StationInfoView
+from ocean_station.views import OceanStationsView, RegionStationsView, StationInfoView, \
+    StationUpdateView
 
 urlpatterns = [
     path('ocean_station/', include([
@@ -8,6 +9,7 @@ urlpatterns = [
         path('<str:region>', RegionStationsView.as_view(), name='region_stations'),
         path('<slug:slug>/', include([
             path('info', StationInfoView.as_view(), name='station_info'),
+            path('update', StationUpdateView.as_view(), name='station_update'),
         ]))
     ])),
 ]
