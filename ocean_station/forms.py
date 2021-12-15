@@ -3,7 +3,7 @@ from django.contrib.auth.views import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from ocean_station.models import User
-from ocean_station.models import Station
+from ocean_station.models import Station, Content
 from ocean_station.definitions import Region
 
 
@@ -32,3 +32,9 @@ class StationUpdateForm(forms.ModelForm):
     class Meta:
         model = Station
         fields = ['name', 'manager', 'region', 'address', 'coordinate', 'contact_phone', 'fans_page_url']
+
+
+class ContentEditForm(forms.ModelForm):
+    class Meta:
+        model = Content
+        fields = ['content_flag', 'description']

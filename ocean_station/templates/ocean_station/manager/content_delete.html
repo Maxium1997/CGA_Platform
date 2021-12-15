@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load station_filter %}
+
+{% block title %}
+Ocean Station
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'region_stations' station.region|readable_region:1 %}">Ocean Station</a></li>
+<li class="breadcrumb-item"><a href="{% url 'station_info' station.slug %}">{{ station }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'station_update' station.slug %}">Edit</a></li>
+<li class="breadcrumb-item"><a href="{% url 'station_contents' station.slug %}">Contents</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="raw justify-content-center">
+            <h3>{{ object.content_flag|readable_content_flag:1 }}</h3>
+            <p>{{ object.description|linebreaks|safe }}</p>
+            <p style="color: red;">Are you sure to delete this content?</p>
+            <button type="submit" class="btn btn-danger">Sure</button>
+            <button type="button" class="btn btn-secondary" onclick="history.back();">Cancel</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

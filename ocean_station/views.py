@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -10,9 +10,9 @@ from django.contrib import messages
 
 from django.db.models import Q
 
-from ocean_station.models import Station
+from ocean_station.models import Station, Content
 from ocean_station.definitions import Region, ContentFlag, PhotoFlag
-from ocean_station.forms import StationUpdateForm
+from ocean_station.forms import StationUpdateForm, ContentEditForm
 
 # Create your views here.
 
@@ -112,5 +112,77 @@ class StationUpdateView(UpdateView):
 
     def get_success_url(self):
         station = self.get_object()
-        region = [_.value[1] for _ in Region.__members__.values()]
         return reverse_lazy('station_update', kwargs={'slug': station.slug})
+
+
+@method_decorator(login_required, name='dispatch')
+class StationContentView(ListView):
+    template_name = 'ocean_station/manager/contents.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user == self.get_object().manager or request.user.is_superuser:
+            return super(StationContentView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_object(self):
+        return Station.objects.get(slug=self.kwargs.get('slug'))
+
+    def get_queryset(self):
+        return self.get_object().introductions.all().order_by('content_flag')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(StationContentView, self).get_context_data(**kwargs)
+        context['station'] = self.get_object()
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class StationContentUpdateView(UpdateView):
+    model = Station
+    template_name = 'ocean_station/manager/content_edit.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        station = Station.objects.get(slug=self.kwargs.get('slug'))
+        if request.user == station.manager or request.user.is_superuser:
+            return super(StationContentUpdateView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_object(self, queryset=None):
+        return Content.objects.get(id=self.kwargs.get('id'))
+
+    def get_context_data(self, **kwargs):
+        context = super(StationContentUpdateView, self).get_context_data(**kwargs)
+        context['station'] = self.get_object().content_object
+        return context
+
+    def get_form_class(self):
+        return ContentEditForm
+
+    def get_success_url(self):
+        return reverse_lazy('station_contents', kwargs={'slug': self.get_object().content_object.slug})
+
+
+@method_decorator(login_required, name='dispatch')
+class StationContentDelView(DeleteView):
+    model = Station
+    template_name = 'ocean_station/manager/content_delete.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        station = Station.objects.get(slug=self.kwargs.get('slug'))
+        if request.user == station.manager or request.user.is_superuser:
+            return super(StationContentDelView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_object(self, queryset=None):
+        return Content.objects.get(id=self.kwargs.get('id'))
+
+    def get_context_data(self, **kwargs):
+        context = super(StationContentDelView, self).get_context_data(**kwargs)
+        context['station'] = self.get_object().content_object
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('station_contents', kwargs={'slug': self.get_object().content_object.slug})
