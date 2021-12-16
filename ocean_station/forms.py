@@ -12,7 +12,7 @@ class StationUpdateForm(forms.ModelForm):
         super(StationUpdateForm, self).__init__(*args, **kwargs)
         region_choices = [(_.value[0], _.value[1]) for _ in Region.__members__.values()]
         self.fields['name'] = forms.CharField(required=True,
-                                                  widget=forms.TextInput(attrs={'class': 'form-control border-0'}))
+                                              widget=forms.TextInput(attrs={'class': 'form-control border-0'}))
         self.fields['region'] = forms.ChoiceField(required=False,
                                                   choices=region_choices,
                                                   widget=forms.Select(attrs={'class': 'form-control border-0'}))
@@ -35,6 +35,26 @@ class StationUpdateForm(forms.ModelForm):
 
 
 class ContentEditForm(forms.ModelForm):
+    class Meta:
+        model = Content
+        fields = ['content_flag', 'description']
+
+
+class ContentAddForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.content_type = kwargs.pop('content_type')
+        self.object_id = kwargs.pop('object_id')
+        super(ContentAddForm, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        content = super(ContentAddForm, self).save(commit=False)
+        content.content_type = self.content_type
+        content.object_id = self.object_id
+
+        if commit:
+            content.save()
+        return content
+
     class Meta:
         model = Content
         fields = ['content_flag', 'description']

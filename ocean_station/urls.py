@@ -1,7 +1,8 @@
 from django.urls import path, include
 
 from ocean_station.views import OceanStationsView, RegionStationsView, StationInfoView, \
-    StationUpdateView, StationContentView, StationContentUpdateView, StationContentDelView
+    StationUpdateView, StationContentView, StationContentUpdateView, StationContentDelView, \
+    content_add
 
 urlpatterns = [
     path('ocean_station/', include([
@@ -12,6 +13,7 @@ urlpatterns = [
             path('update', StationUpdateView.as_view(), name='station_update'),
             path('content/', include([
                 path('list', StationContentView.as_view(), name='station_contents'),
+                path('add', content_add, name='content_add'),
                 path('<id>/', include([
                     path('edit', StationContentUpdateView.as_view(), name='content_edit'),
                     path('delete', StationContentDelView.as_view(), name='content_del'),

@@ -1,18 +1,19 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView
+from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 
 
 from django.db.models import Q
 
 from ocean_station.models import Station, Content
 from ocean_station.definitions import Region, ContentFlag, PhotoFlag
-from ocean_station.forms import StationUpdateForm, ContentEditForm
+from ocean_station.forms import StationUpdateForm, ContentEditForm, ContentAddForm
 
 # Create your views here.
 
@@ -134,7 +135,17 @@ class StationContentView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(StationContentView, self).get_context_data(**kwargs)
         context['station'] = self.get_object()
+        context['content_add_form'] = ContentAddForm(content_type=ContentType.objects.get_for_model(Station),
+                                                     object_id=self.get_object())
         return context
+
+
+@login_required
+def content_add(request, slug):
+    station = get_object_or_404(Station, slug=slug)
+    ContentAddForm(request.POST, content_type=ContentType.objects.get_for_model(Station), object_id=station.id).save()
+
+    return redirect('station_contents', slug=station.slug)
 
 
 @method_decorator(login_required, name='dispatch')

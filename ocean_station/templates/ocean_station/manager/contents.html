@@ -34,6 +34,25 @@ Ocean Station
                     </td>
                 </tr>
                 {% endfor %}
+                <tr>
+                    <td colspan="3">
+                        <form method="post" action="{% url 'content_add' station.slug %}">
+                            {% csrf_token %}
+                            <table>
+                                <tr>
+                                    <td>{{ content_add_form.content_flag.label }}</td>
+                                    <td>{{ content_add_form.content_flag }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ content_add_form.description.label }}</td>
+                                    <td>{{ content_add_form.description }}</td>
+                                </tr>
+                            </table>
+                            <button type="submit" class="btn btn-success">Add</button>
+                            <button type="reset" class="btn btn-light">Reset</button>
+                        </form>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
