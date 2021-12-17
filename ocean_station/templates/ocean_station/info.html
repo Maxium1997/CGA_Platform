@@ -39,14 +39,14 @@ Ocean Station
                         {% for photo in station.album.all %}
                         {% if forloop.counter == 1 %}
                         <div class="carousel-item active">
-                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}">
+                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}" onclick="window.open('{{ photo.path.url }}')" style="cursor: pointer;">
                             <div class="carousel-caption">
                                 <h2 class="fw-light">{{ photo.title }}</h2>
                             </div>
                         </div>
                         {% else %}
                         <div class="carousel-item">
-                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}">
+                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}" onclick="window.open('{{ photo.path.url }}')" style="cursor: pointer;">
                             <div class="carousel-caption">
                                 <h2 class="fw-light">{{ photo.title }}</h2>
                             </div>
