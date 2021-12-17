@@ -13,7 +13,7 @@ from django.db.models import Q
 
 from ocean_station.models import Station, Content
 from ocean_station.definitions import Region, ContentFlag, PhotoFlag
-from ocean_station.forms import StationUpdateForm, ContentEditForm, ContentAddForm
+from ocean_station.forms import StationUpdateForm, ContentEditForm, ContentAddForm, AttractionAddForm
 
 # Create your views here.
 
@@ -53,44 +53,67 @@ class StationInfoView(DetailView):
                 introductions.filter(content_flag=ContentFlag.Overview.value[0]).order_by('sequence', 'id')
         except ObjectDoesNotExist:
             context['overviews'] = None
+
         try:
             filter_criteria = Q(photo_flag=PhotoFlag.Main.value[0]) | Q(photo_flag=PhotoFlag.Display.value[0])
             context['album'] = self.get_object().\
                 album.filter(filter_criteria)
         except ValueError:
             context['album'] = None
+
         try:
             context['contents'] = self.get_object().\
                 introductions.filter(content_flag=ContentFlag.Content.value[0]).order_by('sequence', 'id')
         except ObjectDoesNotExist:
             context['contents'] = None
+
         try:
             context['traffic_info'] = self.get_object().\
                 introductions.filter(content_flag=ContentFlag.TrafficInfo.value[0])
         except ObjectDoesNotExist:
             context['traffic_info'] = None
+
         try:
             context['cautions'] = self.get_object().\
                 introductions.filter(content_flag=ContentFlag.Cautions.value[0])
         except ObjectDoesNotExist:
             context['cautions'] = None
+
         try:
             context['others'] = self.get_object().\
                 introductions.filter(content_flag=ContentFlag.Other.value[0])
         except ObjectDoesNotExist:
             context['others'] = None
+
         try:
             context['region_stations'] = Station.objects.\
                 filter(region=self.get_object().region).\
                 exclude(slug=self.get_object().slug)
         except ObjectDoesNotExist:
             context['region_stations'] = None
+
+        context['attraction_add_form'] = AttractionAddForm(content_type=ContentType.objects.get_for_model(Station),
+                                                           object_id=self.get_object().id)
+
         return context
 
     def get_object(self, queryset=None):
         slug = self.kwargs.get('slug')
         station = Station.objects.get(slug=slug)
         return station
+
+
+@login_required
+def attraction_add(request, slug):
+    station = get_object_or_404(Station, slug=slug)
+    if request.user == station.manager or request.user.is_superuser:
+        AttractionAddForm(request.POST,
+                       content_type=ContentType.objects.get_for_model(Station),
+                       object_id=station.id).save()
+    else:
+        raise PermissionDenied
+
+    return redirect('station_info', slug=station.slug)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -143,7 +166,12 @@ class StationContentView(ListView):
 @login_required
 def content_add(request, slug):
     station = get_object_or_404(Station, slug=slug)
-    ContentAddForm(request.POST, content_type=ContentType.objects.get_for_model(Station), object_id=station.id).save()
+    if request.user == station.manager or request.user.is_superuser:
+        ContentAddForm(request.POST,
+                       content_type=ContentType.objects.get_for_model(Station),
+                       object_id=station.id).save()
+    else:
+        raise PermissionDenied
 
     return redirect('station_contents', slug=station.slug)
 

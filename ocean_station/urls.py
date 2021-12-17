@@ -2,7 +2,7 @@ from django.urls import path, include
 
 from ocean_station.views import OceanStationsView, RegionStationsView, StationInfoView, \
     StationUpdateView, StationContentView, StationContentUpdateView, StationContentDelView, \
-    content_add
+    content_add, attraction_add
 
 urlpatterns = [
     path('ocean_station/', include([
@@ -19,6 +19,9 @@ urlpatterns = [
                     path('delete', StationContentDelView.as_view(), name='content_del'),
                 ])),
             ])),
+            path('attraction/', include([
+                path('add', attraction_add, name='attraction_add'),
+            ]))
         ]))
     ])),
 ]

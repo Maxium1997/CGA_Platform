@@ -3,7 +3,7 @@ from django.contrib.auth.views import AuthenticationForm
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 from ocean_station.models import User
-from ocean_station.models import Station, Content
+from ocean_station.models import Station, Content, TaggedAttraction
 from ocean_station.definitions import Region
 
 
@@ -58,3 +58,30 @@ class ContentAddForm(forms.ModelForm):
     class Meta:
         model = Content
         fields = ['content_flag', 'description']
+
+
+class AttractionAddForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.content_type = kwargs.pop('content_type')
+        self.object_id = kwargs.pop('object_id')
+        super(AttractionAddForm, self).__init__(*args, **kwargs)
+        self.fields['name'] = forms.CharField(required=True,
+                                              widget=forms.TextInput(attrs={'class': 'form-control'}))
+        self.fields['tag'] = forms.CharField(required=True,
+                                             widget=forms.TextInput(attrs={'class': 'form-control',
+                                                                           'placeholder':
+                                                                               'Use \'-\' to instead space'
+                                                                               ' between the letter'}))
+
+    def save(self, commit=True):
+        content = super(AttractionAddForm, self).save(commit=False)
+        content.content_type = self.content_type
+        content.object_id = self.object_id
+
+        if commit:
+            content.save()
+        return content
+
+    class Meta:
+        model = TaggedAttraction
+        fields = ['name', 'tag']
