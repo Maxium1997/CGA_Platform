@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'registration',
     'multi_relation',
     'ocean_station',
+    'cga_booking',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ object.name }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+
+        <table class="text-center align-middle">
+            <thead>
+                <tr>
+                    <th class="col-3">Room photos</th>
+                    <th class="col-3">People limit</th>
+                    <th class="col-3">Price per night</th>
+                    <th class="col-3">Price per night</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for room in object.room_set.all %}
+            <tr class="border-top">
+                <td>
+                    <span class="text-dark h3 fw-light">{{ room }}</span>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12"><img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></div>
+                            <div class="col-6"><img src="{{ room.photos.all.1.path.url }}" class="d-block w-100" alt="{{ room.photos.all.1.title }}" onclick="window.open('{{ room.photos.all.1.path.url }}')" style="cursor: pointer;"></div>
+                            <div class="col-6"><img src="{{ room.photos.all.2.path.url }}" class="d-block w-100" alt="{{ room.photos.all.2.title }}" onclick="window.open('{{ room.photos.all.2.path.url }}')" style="cursor: pointer;"></div>
+                        </div>
+                    </div>
+                </td>
+                <td><span class="text-success h3 fw-light">{{ room.people_limit }}</span></td>
+                <td><i class="text-danger h3 fw-light">NT${{ room.price }}</i></td>
+                <td><button type="button" class="btn btn-primary">Reserve</button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
