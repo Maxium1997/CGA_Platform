@@ -13,9 +13,108 @@ CGA Booking
 {% block body %}
 <div class="container">
     <div class="row">
+        <h1>{{ object.name }}</h1>
+        {% if request.user == station.manager or request.user.is_superuser %}
+        <i class="bi bi-pencil-square" style="cursor: pointer" onclick="window.location.href='#hotel_update'">Edit</i>
+        {% endif %}
+    </div>
 
-        <table class="text-center align-middle">
-            <thead>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6">
+            {% if hotel.external_appearance %}
+            <img src="{{ hotel.external_appearance.url }}" class="d-block w-100" alt="{{ hotel.name }}" onclick="window.open('{{ hotel.external_appearance.url }}')" style="cursor: pointer;">
+            {% endif %}
+        </div>
+        {% if overviews %}
+        <div class="col-md-6 h5 fw-light">
+            {% for overview in overviews %}
+            <p>{{ overview.description|linebreaks|safe }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <div class="col-12 table-responsive">
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <td class="col-2 align-middle">Address</td>
+                        <td class="col-10 align-middle">{{ hotel.address }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-2 align-middle">Coordinate</td>
+                        <td class="col-10 align-middle">{{ hotel.coordinate }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-2 align-middle">Contact Phone</td>
+                        <td class="col-10 align-middle">{{ hotel.contact_phone }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-2 align-middle">Attractions</td>
+                        <td class="col-10 align-middle">
+                            {% for attraction in station.attractions.all %}
+                            <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
+                            {% endfor %}
+                            {% if request.user.is_superuser %}
+                            <i class="bi bi-bookmark-plus" data-toggle="modal" data-target="#TagModalForm" style="cursor: pointer"></i>
+                            <div class="modal fade" id="TagModalForm" tabindex="-1" role="dialog" aria-labelledby="TagModalForm" aria-hidden="true">
+                                <form method="post" action="{% url 'attraction_add' hotel.slug %}">
+                                    {% csrf_token %}
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content text-secondary">
+                                            <div class="modal-header text-center" style="width: 100%">
+                                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div id="user-modal-menu" style="width: 100%">
+                                                {{ attraction_add_form.as_p }}
+                                            </div>
+
+                                            <div class="modal-footer" style="width: 100%">
+                                                <button type="submit" class="btn btn-primary">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-2 align-middle">Fans Page/Website</td>
+                        <td class="col-10 align-middle"><a href="{{ hotel.website }}">{{ hotel.website }}</a></td>
+                    </tr>
+                    <tr>
+                        <td class="col-2 align-middle">Rooms</td>
+                        <td class="col-10 align-middle">{{ hotel.room_set.count }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if cautions %}
+    <div class="row border-top pt-2">
+        <h3>Cautions</h3>
+        {% for caution in cautions %}
+        <p>{{ caution.description|linebreaks|safe }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if others %}
+    <div class="row border-top pt-2">
+        <h3>Others</h3>
+        {% for other in others %}
+        <p>{{ other.description|linebreaks|safe }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <table class="align-middle">
+            <thead class="text-center">
                 <tr>
                     <th class="col-3">Room photos</th>
                     <th class="col-3">People limit</th>
@@ -26,8 +125,10 @@ CGA Booking
             <tbody>
             {% for room in object.room_set.all %}
             <tr class="border-top">
+                <td colspan="4"><span class="text-dark h5 fw-light">{{ room }}</span></td>
+            </tr>
+            <tr class="text-center">
                 <td>
-                    <span class="text-dark h3 fw-light">{{ room }}</span>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12"><img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></div>

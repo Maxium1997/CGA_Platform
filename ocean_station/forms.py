@@ -35,9 +35,14 @@ class StationUpdateForm(forms.ModelForm):
 
 
 class ContentEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ContentEditForm, self).__init__(*args, **kwargs)
+        self.fields['description'] = forms.CharField(required=True,
+                                                     widget=forms.Textarea(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Content
-        fields = ['content_flag', 'description']
+        fields = ['content_flag', 'description', 'sequence']
 
 
 class ContentAddForm(forms.ModelForm):
@@ -45,6 +50,8 @@ class ContentAddForm(forms.ModelForm):
         self.content_type = kwargs.pop('content_type')
         self.object_id = kwargs.pop('object_id')
         super(ContentAddForm, self).__init__(*args, **kwargs)
+        self.fields['description'] = forms.CharField(required=True,
+                                                     widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     def save(self, commit=True):
         content = super(ContentAddForm, self).save(commit=False)

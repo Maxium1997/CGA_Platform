@@ -14,6 +14,12 @@ class RoomAdmin(admin.ModelAdmin):
     list_display = ['name', 'belongs2']
 
 
+@admin.register(Intro)
+class IntroAdmin(admin.ModelAdmin):
+    list_display = ['content_object', 'content_flag', 'sequence', 'content_type', 'object_id']
+    ordering = ('content_type', 'object_id', 'content_flag', 'sequence', 'id')
+
+
 @admin.register(InternalPhoto)
 class InternalPhotoAdmin(admin.ModelAdmin):
     list_display = ['content_object', 'content_type', 'object_id', 'path']

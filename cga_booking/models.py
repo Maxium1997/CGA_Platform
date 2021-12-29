@@ -58,6 +58,12 @@ class Hotel(models.Model):
     attractions = GenericRelation(Attraction)
     introductions = GenericRelation(Intro)
 
+    def get_overview(self):
+        try:
+            return self.introductions.filter(content_flag=ContentFlag.Overview.value[0])[0]
+        except IndexError:
+            return None
+
     def __str__(self):
         return self.name
 
