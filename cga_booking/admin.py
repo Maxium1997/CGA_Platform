@@ -24,3 +24,8 @@ class IntroAdmin(admin.ModelAdmin):
 class InternalPhotoAdmin(admin.ModelAdmin):
     list_display = ['content_object', 'content_type', 'object_id', 'path']
     ordering = ('content_type', 'object_id', 'id')
+
+
+@admin.register(Attraction)
+class AttractionAdmin(admin.ModelAdmin):
+    list_display = ['content_object', 'name']

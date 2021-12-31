@@ -51,9 +51,13 @@ CGA Booking
                         <td class="col-10 align-middle">{{ hotel.contact_phone }}</td>
                     </tr>
                     <tr>
+                        <td class="col-2 align-middle">Contact Email</td>
+                        <td class="col-10 align-middle"><a href = "mailto: {{ hotel.contact_email }}">{{ hotel.contact_email }}</a></td>
+                    </tr>
+                    <tr>
                         <td class="col-2 align-middle">Attractions</td>
                         <td class="col-10 align-middle">
-                            {% for attraction in station.attractions.all %}
+                            {% for attraction in hotel.attractions.all %}
                             <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                             {% endfor %}
                         </td>
