@@ -60,6 +60,30 @@ CGA Booking
                         </tr>
                     </tbody>
                 </table>
+
+                <table class="table table-striped text-center">
+                    <thead>
+                        <th>Name</th>
+                        <th>Price(per/night)</th>
+                        <th>Single Bed</th>
+                        <th>Double Bed</th>
+                    </thead>
+                    <tbody>
+                        {% for room in hotel.room_set.all %}
+                        <tr>
+                            <td>{{ room.name }}</td>
+                            <td>NT<i class="bi bi-currency-dollar"></i>{{ room.price }}</td>
+                            <td>{{ room.single_bed }}</td>
+                            <td>{{ room.double_bed }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4">
+                                <span class="badge rounded-pill bg-warning" onclick="window.location.href='{% url 'room_add' hotel.slug %}'" style="cursor: pointer;">+</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

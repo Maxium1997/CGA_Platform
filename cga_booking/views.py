@@ -1,12 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, UpdateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.core.exceptions import PermissionDenied
+from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 
-from cga_booking.models import Hotel
+from cga_booking.models import Hotel, Room
 from cga_booking.definitions import ContentFlag
 from cga_booking.forms import HotelUpdateForm, HotelAttractionAddForm
 # Create your views here.
@@ -61,6 +62,28 @@ class HotelUpdateView(UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Updated successfully.")
         return super(HotelUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        hotel = self.get_object()
+        return reverse_lazy('hotel_update', kwargs={'slug': hotel.slug})
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomAddView(CreateView):
+    model = Room
+    template_name = 'hotel/manager/room/add.html'
+    fields = ['belongs2', 'name', 'price', 'single_bed', 'double_bed']
+    
+    def dispatch(self, request, *args, **kwargs):
+        return super(RoomAddView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Hotel, slug=self.kwargs.get('slug'))
+
+    def get_context_data(self, **kwargs):
+        context = super(RoomAddView, self).get_context_data(**kwargs)
+        context['hotel'] = self.get_object()
+        return context
 
     def get_success_url(self):
         hotel = self.get_object()
