@@ -60,6 +60,29 @@ CGA Booking
                             {% for attraction in hotel.attractions.all %}
                             <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                             {% endfor %}
+                            {% if request.user.is_superuser %}
+                            <i class="bi bi-bookmark-plus" data-toggle="modal" data-target="#TagModalForm" style="cursor: pointer"></i>
+                            <div class="modal fade" id="TagModalForm" tabindex="-1" role="dialog" aria-labelledby="TagModalForm" aria-hidden="true">
+                                <form method="post" action="{% url 'hotel_attraction_add' hotel.slug %}">
+                                    {% csrf_token %}
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content text-secondary">
+                                            <div class="modal-header text-center" style="width: 100%">
+                                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div id="user-modal-menu" style="width: 100%">
+                                                {{ hotel_attraction_add_form.as_p }}
+                                            </div>
+
+                                            <div class="modal-footer" style="width: 100%">
+                                                <button type="submit" class="btn btn-primary">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
