@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from cga_booking.models import Hotel, Room, Attraction, Intro, InternalPhoto
+from cga_booking.models import Hotel, Room, RoomReservation,\
+    Attraction, Intro, InternalPhoto
 # Register your models here.
 
 
@@ -12,6 +13,11 @@ class HotelAdmin(admin.ModelAdmin):
 @admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
     list_display = ['name', 'belongs2']
+
+
+@admin.register(RoomReservation)
+class ReservationAdmin(admin.ModelAdmin):
+    list_display = ['content_object', 'start_time', 'end_time', 'created_by']
 
 
 @admin.register(Intro)

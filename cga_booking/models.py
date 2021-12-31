@@ -2,11 +2,12 @@ import os
 from uuid import uuid4
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
-from cga_booking.definitions import Usages, ReservationStatus, PaymentStatus, Gender, ContentFlag
+from cga_booking.definitions import ReservationUsages, ReservationStatus, Gender, ContentFlag
 from registration.models import User
-from multi_relation.models import TextItem, TaggedItem
+from multi_relation.models import TextItem, TaggedItem, Reservation
 
 # Create your models here.
 
@@ -81,3 +82,16 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class RoomReservation(Reservation):
+    USAGES_CHOICES = [(_.value[0], _.value[1]) for _ in ReservationUsages.__members__.values()]
+    usage = models.PositiveSmallIntegerField(choices=USAGES_CHOICES,
+                                             default=ReservationUsages.Other.value[0])
+
+    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, related_name='customer')
+
+    def set_serial_number(self, name: str, datetime):
+        datetime_str = datetime.strftime("%Y%m%d%H%M")
+        serial_number_str = name + datetime_str
+        self.serial_number = serial_number_str.encode('utf-8').hex()
