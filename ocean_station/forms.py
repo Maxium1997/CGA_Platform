@@ -73,9 +73,10 @@ class AttractionAddForm(forms.ModelForm):
         self.object_id = kwargs.pop('object_id')
         super(AttractionAddForm, self).__init__(*args, **kwargs)
         self.fields['name'] = forms.CharField(required=True,
-                                              widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                              widget=forms.TextInput(attrs={'class': 'form-control border-0',
+                                                                            'placeholder': "Enter tag name"}))
         self.fields['tag'] = forms.CharField(required=True,
-                                             widget=forms.TextInput(attrs={'class': 'form-control',
+                                             widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                            'placeholder':
                                                                                'Use \'-\' to instead space'
                                                                                ' between the letter'}))

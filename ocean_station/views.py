@@ -107,9 +107,10 @@ class StationInfoView(DetailView):
 def attraction_add(request, slug):
     station = get_object_or_404(Station, slug=slug)
     if request.user == station.manager or request.user.is_superuser:
-        AttractionAddForm(request.POST,
-                          content_type=ContentType.objects.get_for_model(Station),
-                          object_id=station.id).save()
+        new_attraction = AttractionAddForm(request.POST,
+                                           content_type=ContentType.objects.get_for_model(Station),
+                                           object_id=station.id).save()
+        messages.success(request, "Added attraction successfully: {}".format(new_attraction))
     else:
         raise PermissionDenied
 
