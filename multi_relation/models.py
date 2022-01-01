@@ -33,6 +33,7 @@ class Reservation(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     serial_number = models.CharField(max_length=255, unique=True, null=True)
+    price = models.PositiveIntegerField(default=0)
     start_time = models.DateTimeField(null=False, blank=False)
     end_time = models.DateTimeField(null=False, blank=False)
 

@@ -46,6 +46,7 @@ def hotel_attraction_add(request, slug):
     return redirect('hotel_info', slug=hotel.slug)
 
 
+@method_decorator(login_required, name='dispatch')
 class HotelUpdateView(UpdateView):
     model = Hotel
     template_name = 'hotel/manager/update.html'
@@ -73,7 +74,7 @@ class RoomAddView(CreateView):
     model = Room
     template_name = 'hotel/manager/room/add.html'
     fields = ['belongs2', 'name', 'price', 'single_bed', 'double_bed']
-    
+
     def dispatch(self, request, *args, **kwargs):
         return super(RoomAddView, self).dispatch(request, *args, **kwargs)
 
@@ -84,6 +85,18 @@ class RoomAddView(CreateView):
         context = super(RoomAddView, self).get_context_data(**kwargs)
         context['hotel'] = self.get_object()
         return context
+
+    def get_initial(self):
+        initial = super(RoomAddView, self).get_initial()
+        initial['belongs2'] = self.get_object()
+        return initial
+
+    def form_valid(self, form):
+        if form.instance.belongs2 != self.get_object():
+            messages.warning(self.request, 'Your belongs2 column value is not your selected hotel, '
+                                           'please do not changed.')
+            return super(RoomAddView, self).form_invalid(form)
+        return super(RoomAddView, self).form_valid(form)
 
     def get_success_url(self):
         hotel = self.get_object()
