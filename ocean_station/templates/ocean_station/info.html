@@ -6,8 +6,20 @@
 Ocean Station
 {% endblock %}
 
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'region_stations' station.region|readable_region:1 %}">Ocean Station</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ station }}</li>
+{% endblock %}
+
 {% block body %}
 <div class="container">
+    <div class="row">
+        <h1>{{ station.name }}</h1>
+        {% if request.user == station.manager or request.user.is_superuser %}
+        <i class="bi bi-pencil-square" style="cursor: pointer" onclick="window.location.href='{% url 'station_update' station.slug %}'">Edit</i>
+        {% endif %}
+    </div>
+
     <div class="row justify-content-center align-items-center">
         <div class="col-md-6">
             {% if station.album %}
@@ -27,14 +39,14 @@ Ocean Station
                         {% for photo in station.album.all %}
                         {% if forloop.counter == 1 %}
                         <div class="carousel-item active">
-                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}">
+                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}" onclick="window.open('{{ photo.path.url }}')" style="cursor: pointer;">
                             <div class="carousel-caption">
                                 <h2 class="fw-light">{{ photo.title }}</h2>
                             </div>
                         </div>
                         {% else %}
                         <div class="carousel-item">
-                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}">
+                            <img src="{{ photo.path.url }}" class="d-block w-100" alt="{{ photo.title }}" onclick="window.open('{{ photo.path.url }}')" style="cursor: pointer;">
                             <div class="carousel-caption">
                                 <h2 class="fw-light">{{ photo.title }}</h2>
                             </div>
@@ -81,19 +93,40 @@ Ocean Station
                         <td class="col-2 align-middle">Contact Phone</td>
                         <td class="col-10 align-middle">{{ station.contact_phone }}</td>
                     </tr>
-                    {% if station.attractions.all %}
                     <tr>
                         <td class="col-2 align-middle">Attractions</td>
                         <td class="col-10 align-middle">
                             {% for attraction in station.attractions.all %}
                             <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                             {% endfor %}
+                            {% if request.user.is_superuser %}
+                            <i class="bi bi-bookmark-plus" data-toggle="modal" data-target="#TagModalForm" style="cursor: pointer"></i>
+                            <div class="modal fade" id="TagModalForm" tabindex="-1" role="dialog" aria-labelledby="TagModalForm" aria-hidden="true">
+                                <form method="post" action="{% url 'attraction_add' station.slug %}">
+                                    {% csrf_token %}
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content text-secondary">
+                                            <div class="modal-header text-center" style="width: 100%">
+                                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+
+                                            <div id="user-modal-menu" style="width: 100%">
+                                                {{ attraction_add_form.as_p }}
+                                            </div>
+
+                                            <div class="modal-footer" style="width: 100%">
+                                                <button type="submit" class="btn btn-primary">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
                         </td>
                     </tr>
-                    {% endif %}
                     <tr>
-                        <td class="col-2">Fans Page/Website</td>
-                        <td class="col-10"><a href="{{ station.fans_page_url }}">{{ station.fans_page_url }}</a></td>
+                        <td class="col-2 align-middle">Fans Page/Website</td>
+                        <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ station.fans_page_url }}</a></td>
                     </tr>
                     {% if traffic_info %}
                     <tr>
@@ -141,7 +174,7 @@ Ocean Station
     {% if region_stations %}
     <div class="row justify-content-center border-top pt-2">
         <h3>{{ station.region|readable_region:1 }} Others</h3>
-        <div id="carouselExampleControlsNoTouching" class="col-lg-6 col-md-8 col-sm-10 carousel slide" data-bs-touch="false" data-bs-interval="false">
+        <div id="carouselExampleControlsNoTouching" class="col-lg-4 col-md-6 col-8 carousel slide" data-bs-touch="false" data-bs-interval="false">
             <div class="carousel-inner">
                 {% for station in region_stations %}
                 {% if forloop.counter == 1 %}

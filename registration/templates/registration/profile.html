@@ -6,6 +6,10 @@
 {{ request.user }}
 {% endblock %}
 
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">{{ user.username }}</li>
+{% endblock %}
+
 {% block body %}
 <form method="post">
     {% csrf_token %}

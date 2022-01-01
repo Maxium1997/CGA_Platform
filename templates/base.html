@@ -16,7 +16,21 @@
 <body style="background-color: #F8F8FF;">
 {% include 'messages.html' %}
 
+<div class="container">
+    <div class="row">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                {% block breadcrumb %}
+                {% endblock %}
+            </ol>
+        </nav>
+    </div>
+</div>
+
 {% block body %}
+{% block sub_body %}
+{% endblock %}
 {% endblock %}
 </body>
 
