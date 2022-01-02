@@ -1,5 +1,7 @@
 from enum import Enum
 
+from multi_relation.definitions import Status
+
 
 class ReservationUsages(Enum):
     OfficialBusiness = (1, 'Official Business', '公務需求')
@@ -9,6 +11,10 @@ class ReservationUsages(Enum):
 
 
 class ReservationStatus(Enum):
+    Pending = (1, 'Pending', "審查中")
+    Passed = (2, 'Passed', "審查通過")
+    Failed = (3, 'Failed', "審核失敗")
+    Canceled = (4, 'Canceled', '此訂單已取消')
     CheckedIn = (5, 'Check In', "已入住")
     NoShow = (6, 'No Show', '未入住')
     CheckedOut = (7, 'Check Out', '此訂單已退房')

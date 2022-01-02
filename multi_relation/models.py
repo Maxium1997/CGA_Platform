@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from multi_relation.definitions import Status, PaymentStatus
+from registration.models import User
 
 # Create your models here.
 
@@ -34,6 +35,7 @@ class Reservation(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
     serial_number = models.CharField(max_length=255, unique=True, null=True)
     price = models.PositiveIntegerField(default=0)
+    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, related_name='customer')
     start_time = models.DateTimeField(null=False, blank=False)
     end_time = models.DateTimeField(null=False, blank=False)
 

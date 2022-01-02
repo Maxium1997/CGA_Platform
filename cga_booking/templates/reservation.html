@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotel_info' hotel.slug %}">{{ hotel.name }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ room.name }}</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                {% if room.photos.all.0 %}
+                <img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}">
+                {% else %}
+                <img src="{{ room.belongs2.external_appearance.url }}" class="d-block w-100" alt="{{ room.belongs2.name }}">
+                {% endif %}
+                <div class="h4 fw-light">{{ room.belongs2.name }}</div>
+                <div>{{ room.name }}</div>
+            </div>
+            <div class="col-12 col-md-8">
+                <table>
+                    <tr>
+                        <td>{{ form.created_by.label }}</td>
+                        <td>{{ form.created_by }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.start_time.label }}</td>
+                        <td>{{ form.start_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.end_time.label }}</td>
+                        <td>{{ form.end_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.usage.label }}</td>
+                        <td>{{ form.usage }}</td>
+                    </tr>
+                </table>
+                <button type="submit">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -143,7 +143,7 @@ CGA Booking
                 </td>
                 <td><span class="text-success h3 fw-light">{{ room.people_limit }}</span></td>
                 <td><i class="text-danger h3 fw-light">NT${{ room.price }}</i></td>
-                <td><button type="button" class="btn btn-primary">Reserve</button></td>
+                <td><button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'room_reservation' hotel.slug room.pk %}'">Reserve</button></td>
             </tr>
             {% endfor %}
             </tbody>

@@ -69,6 +69,17 @@ class Hotel(models.Model):
         return self.name
 
 
+class RoomReservation(Reservation):
+    USAGES_CHOICES = [(_.value[0], _.value[1]) for _ in ReservationUsages.__members__.values()]
+    usage = models.PositiveSmallIntegerField(choices=USAGES_CHOICES,
+                                             default=ReservationUsages.Other.value[0])
+
+    def set_serial_number(self, name: str, datetime):
+        datetime_str = datetime.strftime("%Y%m%d%H%M")
+        serial_number_str = name + datetime_str
+        self.serial_number = serial_number_str.encode('utf-8').hex()
+
+
 class Room(models.Model):
     belongs2 = models.ForeignKey(Hotel, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=255, null=False, blank=False)
@@ -76,22 +87,10 @@ class Room(models.Model):
     price = models.PositiveIntegerField(default=0, null=True, blank=True)
     single_bed = models.PositiveSmallIntegerField(default=0, null=False, blank=False)
     double_bed = models.PositiveSmallIntegerField(default=0, null=False, blank=False)
+    reservations = GenericRelation(RoomReservation)
 
     def people_limit(self):
         return self.single_bed * 1 + self.double_bed * 2
 
     def __str__(self):
         return self.name
-
-
-class RoomReservation(Reservation):
-    USAGES_CHOICES = [(_.value[0], _.value[1]) for _ in ReservationUsages.__members__.values()]
-    usage = models.PositiveSmallIntegerField(choices=USAGES_CHOICES,
-                                             default=ReservationUsages.Other.value[0])
-
-    created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, related_name='customer')
-
-    def set_serial_number(self, name: str, datetime):
-        datetime_str = datetime.strftime("%Y%m%d%H%M")
-        serial_number_str = name + datetime_str
-        self.serial_number = serial_number_str.encode('utf-8').hex()
