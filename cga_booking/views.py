@@ -204,4 +204,4 @@ class RoomReservationView(CreateView):
         return super(RoomReservationView, self).form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy('profile', kwargs={'username': self.request.user.username})
+        return reverse_lazy('reservations', kwargs={'username': self.request.user.username})

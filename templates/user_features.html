@@ -19,6 +19,9 @@
                 <ul class="list-inline">
                     <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'profile' request.user.username %}'">Profile</li>
                 </ul>
+                <ul class="list-inline">
+                    <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'reservations' request.user.username %}'">Reservation</li>
+                </ul>
             </div>
 
             <div class="modal-footer" style="width: 100%">

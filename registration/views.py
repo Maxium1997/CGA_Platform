@@ -15,6 +15,7 @@ from CGA_Platform.email import sent_confirmation_email_to
 from registration.models import User
 from registration.forms import LoginForm, RegisterForm, \
     SuperuserProfileForm, ProfileForm
+from cga_booking.models import RoomReservation
 
 # Create your views here.
 
@@ -134,4 +135,17 @@ class EmailConfirmDone(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(EmailConfirmDone, self).get_context_data(**kwargs)
         context['tmp'] = kwargs.get('username')
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class ReservationsView(TemplateView):
+    template_name = 'user/reservations.html'
+    
+    def dispatch(self, request, *args, **kwargs):
+        return super(ReservationsView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ReservationsView, self).get_context_data(**kwargs)
+        context['room_reservations'] = RoomReservation.objects.filter(created_by=self.request.user)
         return context

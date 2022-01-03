@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+{% load cga_booking_filters %}
+
+{% block title %}
+{{ request.user }}
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">Reservations</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row justify-content-center">
+            <div class="col-10 rounded-3 bg-dark text-light p-3 mb-4">
+                <p class="h1 fw-light align-middle">{{ user.username }}</p>
+                <p class="text-muted">
+                    Join：{{ user.date_joined }}</br>
+                    Last：{{ user.last_login }}
+                </p>
+            </div>
+
+            <!--Room reservation-->
+            <div class="col-10 rounded-3 m-1 bg-white shadow p-3 bg-body rounded">
+                <h3 class="fw-light align-middle">Room</h3>
+                <table class="table table-striped text-center align-middle">
+                    <thead>
+                        <th>room</th>
+                        <th>check in</th>
+                        <th>check out</th>
+                        <th>status</th>
+                        <th>payment</th>
+                    </thead>
+                    {% for reservation in room_reservations %}
+                    <tr>
+                        <td>{{ reservation.content_object.belongs2.name }} {{ reservation.content_object }}</td>
+                        <td>{{ reservation.start_time|date:"Y/m/d H:i" }}</td>
+                        <td>{{ reservation.end_time|date:"Y/m/d H:i" }}</td>
+                        <td>{{ reservation.status|to_readable_room_status:1 }}</td>
+                        <td>{{ reservation.payment_status|to_readable_room_payment_status:1 }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
