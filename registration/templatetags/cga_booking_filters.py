@@ -7,13 +7,13 @@ from multi_relation.definitions import PaymentStatus
 register = template.Library()
 
 
-@register.filter(name='to_readable_room_usages')
-def to_readable_room_usages(obj: int, language: int):
+@register.filter(name='to_readable_room_usage')
+def to_readable_room_usage(obj: int, language: int):
     return list(ReservationUsages.__members__.values())[obj-1].value[language]
 
 
-@register.filter(name='to_readable_room_status')
-def to_readable_room_status(obj: int, language: int):
+@register.filter(name='to_readable_room_reservation_status')
+def to_readable_room_reservation_status(obj: int, language: int):
     return list(ReservationStatus.__members__.values())[obj-1].value[language]
 
 

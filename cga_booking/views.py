@@ -205,3 +205,28 @@ class RoomReservationView(CreateView):
 
     def get_success_url(self):
         return reverse_lazy('reservations', kwargs={'username': self.request.user.username})
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationInfoView(DetailView):
+    model = RoomReservation
+    template_name = 'user/room_reservation_info.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        if self.request.user.is_superuser:
+            pass
+        elif not room_reservation.customer == self.request.user:
+            raise PermissionDenied
+        return super(RoomReservationInfoView, self).dispatch(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+    def get_context_data(self, **kwargs):
+        context = super(RoomReservationInfoView, self).get_context_data(**kwargs)
+        context['reservation'] = self.get_object()
+        return context
