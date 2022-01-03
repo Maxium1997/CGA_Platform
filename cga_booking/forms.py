@@ -1,5 +1,7 @@
 from django import forms
 
+from registration.models import User
+from registration.definitions import Privilege
 from cga_booking.models import Hotel, Attraction
 
 
@@ -8,6 +10,9 @@ class HotelUpdateForm(forms.ModelForm):
         super(HotelUpdateForm, self).__init__(*args, **kwargs)
         self.fields['name'] = forms.CharField(required=True,
                                               widget=forms.TextInput(attrs={'class': 'form-control border-0'}))
+        self.fields['manager'] = forms.ModelChoiceField(queryset=User.objects.filter(privilege=Privilege.Official.value[0]),
+                                                        required=True,
+                                                        widget=forms.Select(attrs={'class': 'form-control'}))
         self.fields['address'] = forms.CharField(required=False,
                                                  widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                                'placeholder': "Address"}))
@@ -26,7 +31,7 @@ class HotelUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Hotel
-        fields = ['name', 'address', 'coordinate', 'contact_phone', 'contact_email', 'website']
+        fields = ['name', 'manager', 'address', 'coordinate', 'contact_phone', 'contact_email', 'website']
 
 
 class HotelAttractionAddForm(forms.ModelForm):

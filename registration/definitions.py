@@ -18,6 +18,7 @@ class Identity(Enum):
 
 class Privilege(Enum):
     Superuser = (0b11111111, 'Super User', '超級使用者')
+    Official = (0b11, 'Official Account', '官方帳號')
     User = (0b1, 'User', '使用者')
 
 

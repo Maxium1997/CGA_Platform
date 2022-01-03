@@ -50,6 +50,7 @@ class Intro(TextItem):
 class Hotel(models.Model):
     name = models.CharField(max_length=50, unique=True, null=False, blank=False)
     slug = models.SlugField()
+    manager = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
     address = models.CharField(max_length=255, unique=True, null=False, blank=False)
     coordinate = models.CharField(max_length=50, unique=True, null=True, blank=True)
     contact_phone = models.CharField(max_length=20, unique=True, null=True, blank=True)
