@@ -16,7 +16,7 @@ def sent_confirmation_email_to(user: User):
     # strSmtp = "smtp.gmail.com:587"
     # 主機
     account_str = "cgaplatform@gmail.com"      # 備援信箱：
-    password_str = "CGAplatform86925"
+    password_str = "CGAplateform86925"
 
     # encode the verified email
     email = user.email
@@ -36,7 +36,7 @@ def sent_confirmation_email_to(user: User):
                    "Please press the following link below to confirm your email address." + \
                    "This means you will be able to have a full experience in our website, " + \
                    "or if you forget your password, it can help you to reset it.\n\n" + \
-                   "http://cgaplatform.pythonanywhere.com/accounts/confirm_email/{}\n\n".format(str_base64_bytes_encoded_username) + \
+                   "https://cgaplatform.pythonanywhere.com/accounts/confirm_email/{}\n\n".format(str_base64_bytes_encoded_username) + \
                    "Note: If you can't click the link from your email program, " \
                    "you also can copy the URL and paste it into your web browser.\n\n" + \
                    "If you don't want to use CGA Platform, just ignore this message.\n\n" + \
@@ -72,7 +72,7 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
     # strSmtp = "smtp.gmail.com:587"
     # 主機
     account_str = "cgaplatform@gmail.com"      # 備援信箱：
-    password_str = "CGAPlatform860925"
+    password_str = "CGAplateform860925"
     reserved_room = Room.objects.get(id=reservation.object_id)
 
     # encode the verified email
@@ -96,9 +96,9 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
                        "Status：" + list(ReservationStatus.__members__.values())[reservation.status-1].value[2] + "\n" + \
                        "Payment Status：" + list(PaymentStatus.__members__.values())[reservation.payment_status-1].value[2] + "\n\n" + \
                        "You can press here to check your reservation detail, " +\
-                       "http://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
+                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
                        "or you can press here to cancel your reservation, " + \
-                       "http://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/cancel\n\n" +  \
+                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/cancel\n\n" +  \
                        "I hope we can meet in time. If you have any problem, please contact us with the mail " + \
                        reserved_room.belongs2.contact_email + " " \
                        "or you can call the phone " + reserved_room.belongs2.contact_phone + "\n\n" + \
@@ -111,9 +111,9 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
                        "When you check in, please show the link to the hotel staff, " \
                        "they will help you to check the reservation.\n\n" + \
                        "Reservation Detail Link, press here, " + \
-                       "http://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
+                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
                        "Check In Link, press here, " + \
-                       "http://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/check_in" + "\n\n" + \
+                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/check_in" + "\n\n" + \
                        "We hope to meet you that day.\n\n" + "Regards, CGA Info System Developer."
 
     elif reservation.status == ReservationStatus.Canceled.value[0]:
@@ -122,7 +122,7 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
                        "Sorry, Your reservation had been canceled. " + \
                        "If you have any problem, you can contact us through this mail, cga.info.system@gmail.com\n\n" + \
                        "Reservation Detail Link, press here, " + \
-                       "http://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
+                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
                        "Hope to see you next time.\n\n" + "Regards, CGA Info System Developer."
     else:
         pass

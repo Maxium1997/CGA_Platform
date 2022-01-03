@@ -26,27 +26,42 @@ CGA Booking
                 <div>{{ room.name }}</div>
             </div>
             <div class="col-12 col-md-8">
-                <table>
+                <table class="bg-light" width="100%">
                     <tr>
-                        <td>{{ form.created_by.label }}</td>
-                        <td>{{ form.created_by }}</td>
+                        <td colspan="2"><h2>Confirm the reservation</h2></td>
                     </tr>
                     <tr>
-                        <td>{{ form.start_time.label }}</td>
-                        <td>{{ form.start_time }}</td>
+                        <td class="pt-3 pb-3">Customer</td>
+                        <td class="pt-3 pb-3">{{ form.created_by }}</td>
                     </tr>
                     <tr>
-                        <td>{{ form.end_time.label }}</td>
-                        <td>{{ form.end_time }}</td>
+                        <td class="pt-3 pb-3">Check in time</td>
+                        <td class="pt-3 pb-3">{{ form.start_time }}</td>
                     </tr>
                     <tr>
-                        <td>{{ form.usage.label }}</td>
-                        <td>{{ form.usage }}</td>
+                        <td class="pt-3 pb-3">Check out time</td>
+                        <td class="pt-3 pb-3">{{ form.end_time }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pt-3 pb-3">Usage</td>
+                        <td class="pt-3 pb-3">{{ form.usage }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="pt-3 pb-3">
+                            <button type="submit" class="btn btn-primary">Reserved</button>
+                        </td>
                     </tr>
                 </table>
-                <button type="submit">Submit</button>
             </div>
         </div>
+
+        {% for operator, date in last_60_days %}
+        {% if operator %}
+        <button type="button" class="btn btn-danger m-1"><s>{{ date }}</s></button>
+        {% else %}
+        <button type="button" class="btn btn-light m-1">{{ date }}</button>
+        {% endif %}
+        {% endfor %}
     </div>
 </form>
 {% endblock %}

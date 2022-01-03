@@ -1,6 +1,6 @@
 from django import forms
 
-from cga_booking.models import Hotel, Room, Attraction
+from cga_booking.models import Hotel, Attraction
 
 
 class HotelUpdateForm(forms.ModelForm):

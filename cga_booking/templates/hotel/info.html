@@ -132,12 +132,12 @@ CGA Booking
                 <td>
                     <div class="container-fluid">
                         <div class="row">
-                            <span class="text-dark h5 fw-light">{{ room }}</span>
-                        </div>
-                        <div class="row">
                             <div class="col-12"><img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></div>
                             <div class="col-6"><img src="{{ room.photos.all.1.path.url }}" class="d-block w-100" alt="{{ room.photos.all.1.title }}" onclick="window.open('{{ room.photos.all.1.path.url }}')" style="cursor: pointer;"></div>
                             <div class="col-6"><img src="{{ room.photos.all.2.path.url }}" class="d-block w-100" alt="{{ room.photos.all.2.title }}" onclick="window.open('{{ room.photos.all.2.path.url }}')" style="cursor: pointer;"></div>
+                        </div>
+                        <div class="row">
+                            <span class="text-dark h5 fw-light">{{ room }}</span>
                         </div>
                     </div>
                 </td>

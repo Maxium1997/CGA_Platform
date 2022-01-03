@@ -161,6 +161,7 @@ class RoomReservationView(CreateView):
     def form_valid(self, form):
         hotel = Hotel.objects.get(slug=self.kwargs['slug'])
         reserved_room = hotel.room_set.get(pk=self.kwargs['pk'])
+        form.instance.content_type = ContentType.objects.get_for_model(Room)
         form.instance.object_id = reserved_room.id
         form.instance.customer = self.request.user
 
