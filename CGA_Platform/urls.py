@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('registration.urls')),
     path('', include('ocean_station.urls')),
+    path('', include('cga_booking.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

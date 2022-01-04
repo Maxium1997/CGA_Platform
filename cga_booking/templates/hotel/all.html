@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load qr_code %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">Hotel</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        {% for link, hotel in object_list %}
+        <div class="col-12 mb-1 border p-2">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-4 col-12">
+                        {% if hotel.external_appearance %}
+                        <img src="{{ hotel.external_appearance.url }}" width="100%" alt="{{ hotel.name }}">
+                        {% else %}
+                        <img src="{% static 'pic/image-not-found.png' %}" width="100%" alt="Image not found">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8 col-12">
+                        <h1 class="fw-light">{{ hotel.name }}</h1>
+                        <u class="text-success">{{ hotel.address }}</u>
+                        {% if hotel.get_overview %}
+                        <p class="text-muted">{{ hotel.get_overview.description }}</p>
+                        {% endif %}
+                        <p>
+                            <button class="btn btn-primary" onclick="window.open('{{ hotel.website }}');">Website</button>
+                            <a class="btn btn-info" href="{% url 'hotel_info' hotel.slug %}">Info</a>
+                            {% qr_from_text link size=3 border=6 %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

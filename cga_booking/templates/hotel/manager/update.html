@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load station_filter %}
 
 {% block title %}
-Ocean Station
+CGA Booking
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'region_stations' station.region|readable_region:1 %}">Ocean Station</a></li>
-<li class="breadcrumb-item"><a href="{% url 'station_info' station.slug %}">{{ station }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotel_info' hotel.slug %}">{{ hotel }}</a></li>
 <li class="breadcrumb-item active" aria-current="page">Edit</li>
 {% endblock %}
 
@@ -29,10 +28,6 @@ Ocean Station
                             <td class="col-10 align-middle">{{ form.manager }}{{form.errors}}</td>
                         </tr>
                         <tr>
-                            <td class="col-2 align-middle">Region</td>
-                            <td class="col-10 align-middle">{{ form.region }}{{form.errors}}</td>
-                        </tr>
-                        <tr>
                             <td class="col-2 align-middle">Address</td>
                             <td class="col-10 align-middle">{{ form.address }}</td>
                         </tr>
@@ -45,33 +40,50 @@ Ocean Station
                             <td class="col-10 align-middle">{{ form.contact_phone }}</td>
                         </tr>
                         <tr>
+                            <td class="col-2 align-middle">Contact Email</td>
+                            <td class="col-10 align-middle">{{ form.contact_email }}</td>
+                        </tr>
+                        <tr>
                             <td class="col-2 align-middle">Attractions</td>
                             <td class="col-10 align-middle">
-                                {% for attraction in station.attractions.all %}
+                                {% for attraction in hotel.attractions.all %}
                                 <span class="badge rounded-pill bg-success">#{{ attraction }}</span>
                                 {% endfor %}
                             </td>
                         </tr>
                         <tr>
-                            <td class="col-2 align-middle">Fans Page/Website</td>
-                            <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ form.fans_page_url }}</a></td>
+                            <td class="col-2 align-middle">Website</td>
+                            <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ form.website }}</a></td>
                         </tr>
-                        {% if traffic_info %}
-                        <tr>
-                            <td class="col-2">Traffic</td>
-                            <td class="col-10">
-                                {% for info in traffic_info %}
-                                <p>{{ info.description|linebreaks|safe }}</p>
-                                {% endfor %}
-                            </td>
-                        </tr>
-                        {% endif %}
                         <tr>
                             <td colspan="2">
                                 <button type="submit" class="btn btn-primary">Update</button>
-                                <button type="button" class="btn btn-info" onclick="window.location.href='{% url 'station_info' station.slug %}'">View Info</button>
-                                <button type="button" class="btn btn-success" onclick="window.location.href='{% url 'station_contents' station.slug %}'">View Contents</button>
-                                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'station_update' station.slug %}'"><i class="bi bi-arrow-clockwise"></i>Refresh</button>
+                                <button type="button" class="btn btn-info" onclick="window.location.href='{% url 'hotel_info' hotel.slug %}'">View Info</button>
+                                <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'hotel_update' hotel.slug %}'"><i class="bi bi-arrow-clockwise"></i>Refresh</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-striped text-center">
+                    <thead>
+                        <th>Name</th>
+                        <th>Price(per/night)</th>
+                        <th>Single Bed</th>
+                        <th>Double Bed</th>
+                    </thead>
+                    <tbody>
+                        {% for room in hotel.room_set.all %}
+                        <tr>
+                            <td>{{ room.name }}</td>
+                            <td>NT<i class="bi bi-currency-dollar"></i>{{ room.price }}</td>
+                            <td>{{ room.single_bed }}</td>
+                            <td>{{ room.double_bed }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4">
+                                <span class="badge rounded-pill bg-warning" onclick="window.location.href='{% url 'room_add' hotel.slug %}'" style="cursor: pointer;">+</span>
                             </td>
                         </tr>
                     </tbody>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+{% load cga_booking_filters %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'reservations' user.username %}">Reservations</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ reservation.serial_number }}</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container" xmlns="http://www.w3.org/1999/html">
+        <div class="row justify-content-center">
+            <div class="col-10 rounded-3 m-1 bg-white shadow p-3 bg-body rounded">
+                <div class="card mb-2">
+                    <i class="card-header fw-light">
+                        <span class="text-right">{{ reservation.serial_number }}</span>
+                    </i>
+                    <div class="card-body">
+                        <h6 class="card-title fw-light">{{ reservation.content_object.belongs2.name }}｜{{ reservation.content_object }}</h6>
+                        <p class="card-text h4">{{ reservation.start_time|date:"Y/m/d" }}<i class="bi bi-arrow-right bi-warning"></i>{{ reservation.end_time|date:"Y/m/d" }}</p>
+                    </div>
+                </div>
+
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h6 class="fw-light text-muted">Status</h6>
+                        <h4 class="card-text">{{ reservation.status|to_readable_room_reservation_status:1 }}</h4>
+                        <h6 class="fw-light text-muted">Payment</h6>
+                        <h4 class="card-text">{{ reservation.payment_status|to_readable_room_payment_status:1 }}</h4>
+                        <h6 class="fw-light text-muted">Usage</h6>
+                        <h4 class="card-text">{{ reservation.usage|to_readable_room_usage:1 }}</h4>
+                        <h6 class="fw-light text-muted">Reserved Time</h6>
+                        <h4 class="card-text">{{ reservation.created_time|date:"Y/m/d H:i" }}</h4>
+                        <h6 class="fw-light text-muted">Total</h6>
+                        <h4 class="card-text">NT$ <span class="text-danger h1 fw-light">{{ reservation.price }}</span></h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

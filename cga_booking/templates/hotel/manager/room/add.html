@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotel_info' hotel.slug %}">{{ hotel }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotel_update' hotel.slug %}">Edit</a></li>
+<li class="breadcrumb-item active" aria-current="page">Room Add</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <td class="col-2 align-middle">Hotel</td>
+                            <td class="col-10 align-middle">{{ form.belongs2 }}{{form.errors}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-2 align-middle">Name</td>
+                            <td class="col-10 align-middle">{{ form.name }}{{form.errors}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-2 align-middle">Price</td>
+                            <td class="col-10 align-middle">{{ form.price }}{{form.errors}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-2 align-middle">Single Bed</td>
+                            <td class="col-10 align-middle">{{ form.single_bed }}{{form.errors}}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-2 align-middle">Double Bed</td>
+                            <td class="col-10 align-middle">{{ form.double_bed }}{{form.errors}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                                <button type="button" class="btn btn-secondary" onclick="history.back();">Cancel</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

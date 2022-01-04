@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Booking
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
+<li class="breadcrumb-item"><a href="{% url 'hotel_info' hotel.slug %}">{{ hotel.name }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ room.name }}</li>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-4">
+                {% if room.photos.all.0 %}
+                <img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}">
+                {% else %}
+                <img src="{{ room.belongs2.external_appearance.url }}" class="d-block w-100" alt="{{ room.belongs2.name }}">
+                {% endif %}
+                <div class="h4 fw-light">{{ room.belongs2.name }}</div>
+                <div>{{ room.name }}</div>
+            </div>
+            <div class="col-12 col-md-8">
+                <table class="bg-light" width="100%">
+                    <tr>
+                        <td colspan="2"><h2>Confirm the reservation</h2></td>
+                    </tr>
+                    <tr>
+                        <td class="pt-3 pb-3">Customer</td>
+                        <td class="pt-3 pb-3">{{ form.created_by }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pt-3 pb-3">Check in time</td>
+                        <td class="pt-3 pb-3">{{ form.start_time }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pt-3 pb-3">Check out time</td>
+                        <td class="pt-3 pb-3">{{ form.end_time }}</td>
+                    </tr>
+                    <tr>
+                        <td class="pt-3 pb-3">Usage</td>
+                        <td class="pt-3 pb-3">{{ form.usage }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="pt-3 pb-3">
+                            <button type="submit" class="btn btn-primary">Reserved</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {% for operator, date in last_60_days %}
+        {% if operator %}
+        <button type="button" class="btn btn-danger m-1"><s>{{ date }}</s></button>
+        {% else %}
+        <button type="button" class="btn btn-light m-1">{{ date }}</button>
+        {% endif %}
+        {% endfor %}
+    </div>
+</form>
+{% endblock %}

@@ -24,7 +24,9 @@ class OceanStationsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(OceanStationsView, self).get_context_data(object_list=None, **kwargs)
-        context['stations'] = Station.objects.order_by('region')
+        stations = Station.objects.all().order_by('region')
+        station_info_links = ['https://cgaplatform.pythonanywhere.com/ocean_station/{}/info'.format(_.slug) for _ in stations]
+        context['stations'] = zip(station_info_links, stations)
         context['regions'] = [[_.value[0], _.value[1], _.value[2]] for _ in Region.__members__.values()][1:]
         return context
 
@@ -107,9 +109,10 @@ class StationInfoView(DetailView):
 def attraction_add(request, slug):
     station = get_object_or_404(Station, slug=slug)
     if request.user == station.manager or request.user.is_superuser:
-        AttractionAddForm(request.POST,
-                       content_type=ContentType.objects.get_for_model(Station),
-                       object_id=station.id).save()
+        new_attraction = AttractionAddForm(request.POST,
+                                           content_type=ContentType.objects.get_for_model(Station),
+                                           object_id=station.id).save()
+        messages.success(request, "Added attraction successfully: {}".format(new_attraction))
     else:
         raise PermissionDenied
 
@@ -153,7 +156,7 @@ class StationContentView(ListView):
         return Station.objects.get(slug=self.kwargs.get('slug'))
 
     def get_queryset(self):
-        return self.get_object().introductions.all().order_by('content_flag')
+        return self.get_object().introductions.all().order_by('content_flag').order_by('sequence')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(StationContentView, self).get_context_data(**kwargs)
@@ -182,7 +185,7 @@ class StationContentUpdateView(UpdateView):
     template_name = 'ocean_station/manager/content_edit.html'
 
     def dispatch(self, request, *args, **kwargs):
-        station = Station.objects.get(slug=self.kwargs.get('slug'))
+        station = get_object_or_404(Station, slug=kwargs.get('slug'))
         if request.user == station.manager or request.user.is_superuser:
             return super(StationContentUpdateView, self).dispatch(request, *args, **kwargs)
         else:
@@ -194,6 +197,8 @@ class StationContentUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(StationContentUpdateView, self).get_context_data(**kwargs)
         context['station'] = self.get_object().content_object
+        context['contents'] = self.get_object().content_object.introductions.filter(content_flag=self.get_object().content_flag).\
+            order_by('sequence')
         return context
 
     def get_form_class(self):
@@ -209,7 +214,7 @@ class StationContentDelView(DeleteView):
     template_name = 'ocean_station/manager/content_delete.html'
 
     def dispatch(self, request, *args, **kwargs):
-        station = Station.objects.get(slug=self.kwargs.get('slug'))
+        station = get_object_or_404(Station, slug=kwargs.get('slug'))
         if request.user == station.manager or request.user.is_superuser:
             return super(StationContentDelView, self).dispatch(request, *args, **kwargs)
         else:

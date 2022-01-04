@@ -35,9 +35,14 @@ class StationUpdateForm(forms.ModelForm):
 
 
 class ContentEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ContentEditForm, self).__init__(*args, **kwargs)
+        self.fields['description'] = forms.CharField(required=True,
+                                                     widget=forms.Textarea(attrs={'class': 'form-control'}))
+
     class Meta:
         model = Content
-        fields = ['content_flag', 'description']
+        fields = ['content_flag', 'description', 'sequence']
 
 
 class ContentAddForm(forms.ModelForm):
@@ -45,6 +50,8 @@ class ContentAddForm(forms.ModelForm):
         self.content_type = kwargs.pop('content_type')
         self.object_id = kwargs.pop('object_id')
         super(ContentAddForm, self).__init__(*args, **kwargs)
+        self.fields['description'] = forms.CharField(required=True,
+                                                     widget=forms.Textarea(attrs={'class': 'form-control'}))
 
     def save(self, commit=True):
         content = super(ContentAddForm, self).save(commit=False)
@@ -66,9 +73,10 @@ class AttractionAddForm(forms.ModelForm):
         self.object_id = kwargs.pop('object_id')
         super(AttractionAddForm, self).__init__(*args, **kwargs)
         self.fields['name'] = forms.CharField(required=True,
-                                              widget=forms.TextInput(attrs={'class': 'form-control'}))
+                                              widget=forms.TextInput(attrs={'class': 'form-control border-0',
+                                                                            'placeholder': "Enter tag name"}))
         self.fields['tag'] = forms.CharField(required=True,
-                                             widget=forms.TextInput(attrs={'class': 'form-control',
+                                             widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                            'placeholder':
                                                                                'Use \'-\' to instead space'
                                                                                ' between the letter'}))
