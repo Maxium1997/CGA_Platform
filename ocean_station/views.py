@@ -24,7 +24,9 @@ class OceanStationsView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(OceanStationsView, self).get_context_data(object_list=None, **kwargs)
-        context['stations'] = Station.objects.order_by('region')
+        stations = Station.objects.all().order_by('region')
+        station_info_links = ['https://cgaplatform.pythonanywhere.com/ocean_station/{}/info'.format(_.slug) for _ in stations]
+        context['stations'] = zip(station_info_links, stations)
         context['regions'] = [[_.value[0], _.value[1], _.value[2]] for _ in Region.__members__.values()][1:]
         return context
 
