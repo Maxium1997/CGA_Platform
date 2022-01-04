@@ -14,6 +14,7 @@ from cga_booking.definitions import ContentFlag, ReservationUsages, ReservationS
 from cga_booking.forms import HotelUpdateForm, HotelAttractionAddForm
 from cga_booking.decorators import reservation_time_validate
 from CGA_Platform.email import sent_reservation_info
+from registration.definitions import Privilege
 
 # Create your views here.
 
@@ -57,7 +58,7 @@ class HotelUpdateView(UpdateView):
     template_name = 'hotel/manager/update.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_superuser:
+        if request.user.is_superuser or (request.user.privilege == Privilege.Official.value[0]):
             return super(HotelUpdateView, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
@@ -81,7 +82,10 @@ class RoomAddView(CreateView):
     fields = ['belongs2', 'name', 'price', 'single_bed', 'double_bed']
 
     def dispatch(self, request, *args, **kwargs):
-        return super(RoomAddView, self).dispatch(request, *args, **kwargs)
+        if request.user.is_superuser or (request.user.privilege == Privilege.Official.value[0]):
+            return super(RoomAddView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
 
     def get_object(self, queryset=None):
         return get_object_or_404(Hotel, slug=self.kwargs.get('slug'))
@@ -215,9 +219,9 @@ class RoomReservationInfoView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         serial_number = self.kwargs.get('serial_number')
         room_reservation = RoomReservation.objects.get(serial_number=serial_number)
-        if self.request.user.is_superuser:
+        if self.request.user.is_superuser or (self.request.user == room_reservation.content_object.belongs2.manager):
             pass
-        elif not room_reservation.customer == self.request.user:
+        elif not room_reservation.created_by == self.request.user:
             raise PermissionDenied
         return super(RoomReservationInfoView, self).dispatch(request, *args, **kwargs)
 
