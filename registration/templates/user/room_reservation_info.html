@@ -4,7 +4,7 @@
 {% load cga_booking_filters %}
 
 {% block title %}
-{{ request.user }}
+CGA Booking
 {% endblock %}
 
 {% block breadcrumb %}
@@ -39,9 +39,8 @@
                         <h4 class="card-text">{{ reservation.usage|to_readable_room_usage:1 }}</h4>
                         <h6 class="fw-light text-muted">Reserved Time</h6>
                         <h4 class="card-text">{{ reservation.created_time|date:"Y/m/d H:i" }}</h4>
-                    </div>
-                    <div class="card-footer">
-                        <span>TWD {{ reservation.price }}</span>
+                        <h6 class="fw-light text-muted">Total</h6>
+                        <h4 class="card-text">NT$ <span class="text-danger h1 fw-light">{{ reservation.price }}</span></h4>
                     </div>
                 </div>
             </div>

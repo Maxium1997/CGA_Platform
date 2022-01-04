@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load qr_code %}
 
 {% block title %}
 CGA Booking
@@ -12,7 +13,7 @@ CGA Booking
 {% block body %}
 <div class="container">
     <div class="row">
-        {% for hotel in object_list %}
+        {% for link, hotel in object_list %}
         <div class="col-12 mb-1 border p-2">
             <div class="container-fluid">
                 <div class="row align-items-center">
@@ -32,6 +33,7 @@ CGA Booking
                         <p>
                             <button class="btn btn-primary" onclick="window.open('{{ hotel.website }}');">Website</button>
                             <a class="btn btn-info" href="{% url 'hotel_info' hotel.slug %}">Info</a>
+                            {% qr_from_text link size=3 border=6 %}
                         </p>
                     </div>
                 </div>

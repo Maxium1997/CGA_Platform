@@ -23,6 +23,13 @@ class HotelsView(ListView):
     model = Hotel
     template_name = 'hotel/all.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(HotelsView, self).get_context_data(object_list=None, **kwargs)
+        hotels = self.get_queryset()
+        hotel_info_links = ['https://cgaplatform.pythonanywhere.com/hotel/{}/info'.format(_.slug) for _ in hotels]
+        context['object_list'] = zip(hotel_info_links, hotels)
+        return context
+
 
 class HotelInfoView(DetailView):
     model = Hotel
@@ -41,7 +48,7 @@ class HotelInfoView(DetailView):
 @login_required
 def hotel_attraction_add(request, slug):
     hotel = get_object_or_404(Hotel, slug=slug)
-    if request.user.is_superuser:
+    if request.user == hotel.manager or request.user.is_superuser:
         new_attraction = HotelAttractionAddForm(request.POST,
                                                 content_type=ContentType.objects.get_for_model(Hotel),
                                                 object_id=hotel.id).save()
