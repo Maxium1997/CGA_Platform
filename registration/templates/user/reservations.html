@@ -31,6 +31,8 @@
                         <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'room_reservation_info' request.user.username reservation.serial_number %}'">detail</button>
                     </div>
                 </div>
+                {% empty %}
+                <span>No reservation recently.</span>
                 {% endfor %}
             </div>
         </div>
