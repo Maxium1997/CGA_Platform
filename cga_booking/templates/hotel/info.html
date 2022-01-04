@@ -120,10 +120,10 @@ CGA Booking
         <table class="align-middle">
             <thead class="text-center">
                 <tr>
-                    <th class="col-3">Room photos</th>
-                    <th class="col-3">People limit</th>
-                    <th class="col-3">Price per night</th>
-                    <th class="col-3">Price per night</th>
+                    <th class="col-md-6 col-8">Room photos</th>
+                    <th class="col-md-2 col-1">People</th>
+                    <th class="col-md-2 col-1">Price</th>
+                    <th class="col-md-2 col-2"></th>
                 </tr>
             </thead>
             <tbody>
@@ -132,9 +132,17 @@ CGA Booking
                 <td>
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12"><img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></div>
-                            <div class="col-6"><img src="{{ room.photos.all.1.path.url }}" class="d-block w-100" alt="{{ room.photos.all.1.title }}" onclick="window.open('{{ room.photos.all.1.path.url }}')" style="cursor: pointer;"></div>
-                            <div class="col-6"><img src="{{ room.photos.all.2.path.url }}" class="d-block w-100" alt="{{ room.photos.all.2.title }}" onclick="window.open('{{ room.photos.all.2.path.url }}')" style="cursor: pointer;"></div>
+                            <table>
+                                <tr>
+                                    <td rowspan="3"><img src="{{ room.photos.all.0.path.url }}" class="d-block w-100" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="{{ room.photos.all.0.path.url }}" class="d-block w-50" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="{{ room.photos.all.1.path.url }}" class="d-block w-50" alt="{{ room.photos.all.0.title }}" onclick="window.open('{{ room.photos.all.0.path.url }}')" style="cursor: pointer;"></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="row">
                             <span class="text-dark h5 fw-light">{{ room }}</span>
