@@ -72,7 +72,7 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
     # strSmtp = "smtp.gmail.com:587"
     # 主機
     account_str = "cgaplatform@gmail.com"      # 備援信箱：
-    password_str = "CGAplateform860925"
+    password_str = "CGAplateform86925"
     reserved_room = Room.objects.get(id=reservation.object_id)
 
     # encode the verified email

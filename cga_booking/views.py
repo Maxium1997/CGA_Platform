@@ -127,7 +127,11 @@ class RoomReservationView(CreateView):
     valid_message = "Successfully reserved."
     
     def dispatch(self, request, *args, **kwargs):
-        return super(RoomReservationView, self).dispatch(request, *args, **kwargs)
+        if self.request.user.privilege == Privilege.Official.value[0]:
+            messages.warning(request, "Official account cannot use this feature: Reserve room")
+            return redirect('hotels')
+        else:
+            return super(RoomReservationView, self).dispatch(request, *args, **kwargs)
 
     def get_initial(self):
         initial = super(RoomReservationView, self).get_initial()
