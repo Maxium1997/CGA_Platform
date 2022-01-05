@@ -25,7 +25,11 @@ class User(AbstractUser):
     email_is_verify = models.BooleanField(default=False)
     phone = models.CharField(max_length=15, unique=True, null=True, blank=False)
     phone_is_verify = models.BooleanField(default=False)
+    nickname = models.CharField(max_length=100, null=True, blank=True)
     birthday = models.DateField(null=True, auto_now=False)
     updated_time = models.DateTimeField(auto_now=True)
     introduction = models.TextField()
+
+    def get_nickname(self):
+        return self.nickname
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, TemplateView
 from django.core.exceptions import PermissionDenied
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
@@ -15,6 +15,7 @@ from cga_booking.definitions import ContentFlag, ReservationUsages, ReservationS
 from cga_booking.forms import HotelUpdateForm, HotelAttractionAddForm
 from cga_booking.decorators import reservation_time_validate
 from CGA_Platform.email import sent_reservation_info
+from registration.models import User
 from registration.definitions import Privilege
 
 # Create your views here.
@@ -223,18 +224,44 @@ class RoomReservationView(CreateView):
 
 
 @method_decorator(login_required, name='dispatch')
+class RoomReservationsView(TemplateView):
+    template_name = 'hotel/user/reservations.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        return super(RoomReservationsView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(RoomReservationsView, self).get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            context['room_reservations'] = RoomReservation.objects.all()
+
+        elif self.request.user.privilege == Privilege.Official.value[0]:
+            hotels = Hotel.objects.filter(manager=self.request.user)
+            rooms = []
+            for hotel in hotels:
+                rooms.extend(Room.objects.filter(belongs2=hotel))
+            room_reservations = []
+            for room in rooms:
+                room_reservations.extend(room.reservations.all())
+            context['room_reservations'] = room_reservations
+
+        else:
+            context['room_reservations'] = RoomReservation.objects.filter(created_by=self.request.user)
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
 class RoomReservationInfoView(DetailView):
     model = RoomReservation
-    template_name = 'user/room_reservation_info.html'
+    template_name = 'hotel/user/reservation/info.html'
 
     def dispatch(self, request, *args, **kwargs):
         serial_number = self.kwargs.get('serial_number')
         room_reservation = RoomReservation.objects.get(serial_number=serial_number)
         if self.request.user.is_superuser or (self.request.user == room_reservation.content_object.belongs2.manager):
-            pass
+            return super(RoomReservationInfoView, self).dispatch(request, *args, **kwargs)
         elif not room_reservation.created_by == self.request.user:
             raise PermissionDenied
-        return super(RoomReservationInfoView, self).dispatch(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         serial_number = self.kwargs.get('serial_number')
