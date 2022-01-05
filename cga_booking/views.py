@@ -9,6 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from datetime import date, datetime, timedelta
 
+from CGA_Platform.settings import DEBUG
 from cga_booking.models import Hotel, Room, RoomReservation
 from cga_booking.definitions import ContentFlag, ReservationUsages, ReservationStatus
 from cga_booking.forms import HotelUpdateForm, HotelAttractionAddForm
@@ -178,13 +179,12 @@ class RoomReservationView(CreateView):
         reserved_room = hotel.room_set.get(pk=self.kwargs['pk'])
         form.instance.content_type = ContentType.objects.get_for_model(Room)
         form.instance.object_id = reserved_room.id
-        form.instance.customer = self.request.user
 
-        if form.instance.customer is None:
+        if form.instance.created_by is None:
             messages.warning(self.request,
                              "Customer field cannot blank.")
             return super(RoomReservationView, self).form_invalid(form)
-        elif form.instance.customer != self.request.user:
+        elif form.instance.created_by != self.request.user:
             messages.warning(self.request,
                              "Your customer field is not yourself, please do not change the field.")
             return super(RoomReservationView, self).form_invalid(form)
@@ -212,7 +212,7 @@ class RoomReservationView(CreateView):
         form.instance.price = reserved_room.price
 
         form.save()
-        sent_reservation_info(form.instance.customer, form.instance)
+        sent_reservation_info(form.instance.created_by, form.instance)
         return super(RoomReservationView, self).form_valid(form)
 
     def form_invalid(self, form):
@@ -243,5 +243,38 @@ class RoomReservationInfoView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(RoomReservationInfoView, self).get_context_data(**kwargs)
+        context['reservation'] = self.get_object()
+        if DEBUG:
+            context['room_reservation_features_link'] = '127.0.0.1:8000/{}/reservations/{}/features'.format(
+                self.request.user.username,
+                self.get_object().serial_number)
+        else:
+            context[
+                'room_reservation_features_link'] = 'https://cgaplatform.pythonanywhere.com/{}/reservations/{}/features'.format(
+                self.request.user.username,
+                self.get_object().serial_number)
+
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationFeaturesView(DetailView):
+    model = RoomReservation
+    template_name = 'hotel/manager/reservation/features.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        hotel = self.get_object().content_object.belongs2
+        if self.request.user.is_superuser or (self.request.user == hotel.manager):
+            return super(RoomReservationFeaturesView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+    def get_context_data(self, **kwargs):
+        context = super(RoomReservationFeaturesView, self).get_context_data(**kwargs)
         context['reservation'] = self.get_object()
         return context

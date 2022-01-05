@@ -84,7 +84,7 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
     mail_content = ""
     subject_content = ""
     if reservation.status == ReservationStatus.Pending.value[0]:
-        subject_content = "訂單編號：" + reservation.serial_number + "｜審查中｜眷探處所｜CGA Info System"
+        subject_content = "訂單編號：" + reservation.serial_number + "｜審查中｜眷探處所｜CGA Platform"
         mail_content = "Dear Customer, Greeting from CGA Info System!!!!!!\n\n" + \
                        "With reference to your reservation Serial Number " + reservation.serial_number + "as detailed below:\n\n" + \
                        "Hotel：" + reserved_room.belongs2.name + "\n" + \
@@ -92,37 +92,37 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
                        "Room：" + reserved_room.name + "\n" + \
                        "Check In：" + reservation.start_time.strftime("%Y年 %m月 %d日") + "\n" + \
                        "Check Out：" + reservation.end_time.strftime("%Y年 %m月 %d日") + "\n" + \
-                       "Usages：" + list(ReservationUsages.__members__.values())[reservation.usage-1].value[2] + "\n" + \
-                       "Status：" + list(ReservationStatus.__members__.values())[reservation.status-1].value[2] + "\n" + \
-                       "Payment Status：" + list(PaymentStatus.__members__.values())[reservation.payment_status-1].value[2] + "\n\n" + \
+                       "Usage：" + list(ReservationUsages.__members__.values())[reservation.usage-1].value[1] + "\n" + \
+                       "Status：" + list(ReservationStatus.__members__.values())[reservation.status-1].value[1] + "\n" + \
+                       "Payment Status：" + list(PaymentStatus.__members__.values())[reservation.payment_status-1].value[1] + "\n\n" + \
                        "You can press here to check your reservation detail, " +\
-                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
+                       "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
                        "or you can press here to cancel your reservation, " + \
-                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/cancel\n\n" +  \
+                       "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/cancel\n\n" +  \
                        "I hope we can meet in time. If you have any problem, please contact us with the mail " + \
                        reserved_room.belongs2.contact_email + " " \
                        "or you can call the phone " + reserved_room.belongs2.contact_phone + "\n\n" + \
-                       "Hope you have a nice trip.\n\n" + "Regards, CGA Info System Developer."
+                       "Hope you have a nice trip.\n\n" + "Regards, CGA Platform Developer."
 
     elif reservation.status == ReservationStatus.Passed.value[0]:
-        subject_content = "訂單編號：" + reservation.serial_number + "｜審查已通過｜眷探處所｜CGA Info System"
+        subject_content = "訂單編號：" + reservation.serial_number + "｜審查已通過｜眷探處所｜CGA Platform"
         mail_content = "Dear Customer, \n" + \
                        "Congratulation! Your reservation had been passed. " + \
                        "When you check in, please show the link to the hotel staff, " \
                        "they will help you to check the reservation.\n\n" + \
                        "Reservation Detail Link, press here, " + \
-                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
+                       "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
                        "Check In Link, press here, " + \
-                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/check_in" + "\n\n" + \
+                       "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/check_in" + "\n\n" + \
                        "We hope to meet you that day.\n\n" + "Regards, CGA Info System Developer."
 
     elif reservation.status == ReservationStatus.Canceled.value[0]:
-        subject_content = "訂單編號：" + reservation.serial_number + "｜已取消｜眷探處所｜CGA Info System"
+        subject_content = "訂單編號：" + reservation.serial_number + "｜已取消｜眷探處所｜CGA Platform"
         mail_content = "Dear Customer, \n" + \
                        "Sorry, Your reservation had been canceled. " + \
                        "If you have any problem, you can contact us through this mail, cga.info.system@gmail.com\n\n" + \
                        "Reservation Detail Link, press here, " + \
-                       "https://cgainfosystem.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
+                       "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/info" + "\n\n" + \
                        "Hope to see you next time.\n\n" + "Regards, CGA Info System Developer."
     else:
         pass

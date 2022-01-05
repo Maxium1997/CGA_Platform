@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load tz %}
+{% load qr_code %}
 {% load cga_booking_filters %}
 
 {% block title %}
@@ -41,6 +42,12 @@ CGA Booking
                         <h4 class="card-text">{{ reservation.created_time|date:"Y/m/d H:i" }}</h4>
                         <h6 class="fw-light text-muted">Total</h6>
                         <h4 class="card-text">NT$ <span class="text-danger h1 fw-light">{{ reservation.price }}</span></h4>
+                    </div>
+                </div>
+
+                <div class="card mb-2 text-center">
+                    <div class="card-body">
+                        {% qr_from_text room_reservation_features_link size=10 %}
                     </div>
                 </div>
             </div>
