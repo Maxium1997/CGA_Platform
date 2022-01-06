@@ -225,7 +225,7 @@ class RoomReservationView(CreateView):
 
 @method_decorator(login_required, name='dispatch')
 class RoomReservationsView(TemplateView):
-    template_name = 'hotel/user/reservations.html'
+    template_name = 'hotel/reservations.html'
 
     def dispatch(self, request, *args, **kwargs):
         return super(RoomReservationsView, self).dispatch(request, *args, **kwargs)
@@ -237,12 +237,10 @@ class RoomReservationsView(TemplateView):
 
         elif self.request.user.privilege == Privilege.Official.value[0]:
             hotels = Hotel.objects.filter(manager=self.request.user)
-            rooms = []
-            for hotel in hotels:
-                rooms.extend(Room.objects.filter(belongs2=hotel))
-            room_reservations = []
-            for room in rooms:
-                room_reservations.extend(room.reservations.all())
+            room_ids = [_.id for _ in Room.objects.filter(belongs2__in=hotels)]
+            room_type = ContentType.objects.get(model='room')
+            room_reservations = RoomReservation.objects.filter(content_type=room_type,
+                                                               object_id__in=room_ids).order_by('start_time', 'end_time')
             context['room_reservations'] = room_reservations
 
         else:
