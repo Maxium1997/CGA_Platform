@@ -21,11 +21,11 @@ CGA Booking
                     <tbody>
                         <tr>
                             <td class="col-2 align-middle">Name</td>
-                            <td class="col-10 align-middle">{{ form.name }}{{form.errors}}</td>
+                            <td class="col-10 align-middle">{{ form.name }}</td>
                         </tr>
                         <tr>
                             <td class="col-2 align-middle">Manager</td>
-                            <td class="col-10 align-middle">{{ form.manager }}{{form.errors}}</td>
+                            <td class="col-10 align-middle">{{ object.manager }}</td>
                         </tr>
                         <tr>
                             <td class="col-2 align-middle">Address</td>
@@ -75,7 +75,7 @@ CGA Booking
                     <tbody>
                         {% for room in hotel.room_set.all %}
                         <tr>
-                            <td>{{ room.name }}</td>
+                            <td><a href="{% url 'room_update' room.belongs2.slug room.pk %}">{{ room.name }}</a></td>
                             <td>NT<i class="bi bi-currency-dollar"></i>{{ room.price }}</td>
                             <td>{{ room.single_bed }}</td>
                             <td>{{ room.double_bed }}</td>

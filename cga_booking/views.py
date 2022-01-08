@@ -50,7 +50,7 @@ class HotelInfoView(DetailView):
 @login_required
 def hotel_attraction_add(request, slug):
     hotel = get_object_or_404(Hotel, slug=slug)
-    if request.user == hotel.manager or request.user.is_superuser:
+    if request.user == hotel.manager:
         new_attraction = HotelAttractionAddForm(request.POST,
                                                 content_type=ContentType.objects.get_for_model(Hotel),
                                                 object_id=hotel.id).save()
@@ -67,7 +67,7 @@ class HotelUpdateView(UpdateView):
     template_name = 'hotel/manager/update.html'
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_superuser or (request.user.privilege == Privilege.Official.value[0]):
+        if self.request.user == self.get_object().manager:
             return super(HotelUpdateView, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
@@ -91,7 +91,7 @@ class RoomAddView(CreateView):
     fields = ['belongs2', 'name', 'price', 'single_bed', 'double_bed']
 
     def dispatch(self, request, *args, **kwargs):
-        if request.user.is_superuser or (request.user.privilege == Privilege.Official.value[0]):
+        if self.request.user == self.get_object().manager:
             return super(RoomAddView, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
@@ -119,6 +119,35 @@ class RoomAddView(CreateView):
     def get_success_url(self):
         hotel = self.get_object()
         return reverse_lazy('hotel_update', kwargs={'slug': hotel.slug})
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomUpdateView(UpdateView):
+    model = Room
+    template_name = 'hotel/manager/room/update.html'
+    fields = ['name', 'price', 'single_bed', 'double_bed']
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user == self.get_object().belongs2.manager:
+            return super(RoomUpdateView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_context_data(self, **kwargs):
+        context = super(RoomUpdateView, self).get_context_data(**kwargs)
+        context['hotel'] = self.get_object().belongs2
+        context['room'] = self.get_object()
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, "Updated successfully.")
+        return super(RoomUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        room = self.get_object()
+        hotel = self.get_object().belongs2
+        return reverse_lazy('room_update', kwargs={'slug': hotel.slug,
+                                                   'pk': room.pk})
 
 
 @method_decorator(login_required, name='dispatch')
