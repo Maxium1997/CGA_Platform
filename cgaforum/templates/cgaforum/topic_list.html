@@ -24,7 +24,7 @@ CGA Forum
             <tbody>
                 {% for topic in object_list %}
                 <tr>
-                    <td class="pt-3 pb-3">{{ topic }}</a></td>
+                    <td class="pt-3 pb-3"><a href="{% url 'topic' category.slug subcategory.slug topic.pk %}" class="text-decoration-none">{{ topic }}</a></td>
                     <td class="pt-3 pb-3 text-center"></td>
                     <td class="pt-3 pb-3 text-center">{{ topic.published_time|date:"Y/m/d, H:i" }}</td>
                     <td class="pt-3 pb-3 text-center">

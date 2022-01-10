@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Forum
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgaforum' %}">CGA Forum</a></li>
+<li class="breadcrumb-item"><a href="{% url 'subcategories' category.slug %}">{{ category }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'topics' category.slug subcategory.slug %}">{{ subcategory }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ topic }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-12 border-bottom pb-3">
+            <div><h3>{{ topic }}</h3></div>
+            <div class="border-bottom pb-3 mb-3"><u>{{ topic.created_by }}</u> published at <i>{{ topic.published_time }}</i></div>
+            <div>{{ topic.content|linebreaks|safe }}</div>
+            <div>
+                {% for tag in topic.tags.all %}
+                <span class="badge rounded-pill bg-secondary">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
