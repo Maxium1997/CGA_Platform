@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Forum
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgaforum' %}">CGA Forum</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ category }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <table class="table table-striped">
+            <thead>
+                <th class="col-6">Sub Category</th>
+                <th class="col-2">Topics</th>
+                <th class="col-4">Latest</th>
+            </thead>
+            <tbody>
+                {% for subcategory in object_list %}
+                <tr>
+                    <td class="h3 fw-light pt-3 pb-3">{{ subcategory }}</td>
+                    <td class="pt-3 pb-3">{{ subcategory.topic_set.count }}</td>
+                    <td class="pt-3 pb-3">{{ subcategory.get_latest_topics }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
