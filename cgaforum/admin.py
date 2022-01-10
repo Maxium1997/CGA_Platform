@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-from cgaforum.models import Category, SubCategory, Topic
+from cgaforum.models import Category, SubCategory, Topic, Message
 # Register your models here.
 
 
@@ -20,3 +20,8 @@ class SubCategoryAdmin(admin.ModelAdmin):
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'status', 'published_time', 'created_by']
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ['id', 'f', 'content']

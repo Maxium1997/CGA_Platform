@@ -25,6 +25,20 @@ CGA Forum
                 {% endfor %}
             </div>
         </div>
+        <div class="col-lg-4 col-12 border">
+            {% for reply in topic.replies.all %}
+            <div>
+                {% if reply.f.get_nickname %}
+                <strong>{{ reply.f.get_nickname }}</strong>
+                {% else %}
+                <strong>{{ reply.f }}</strong>
+                {% endif %}
+                <span class="text-muted">{{ reply.created_time }}</span></div>
+            <div>{{ reply.content|linebreaks|safe }}</div>
+            {% empty %}
+
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

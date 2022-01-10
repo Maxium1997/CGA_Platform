@@ -12,3 +12,8 @@ class PaymentStatus(Enum):
     Unpaid = (1, 'Unpaid', '未付款')
     Paid = (2, 'Paid', '已付款')
     Refund = (3, 'Refunded', '已退款')
+
+
+class MessageStatus(Enum):
+    Sent = (1, 'Sent', '已傳送')
+    Unsend = (2, 'Unsend', '收回')

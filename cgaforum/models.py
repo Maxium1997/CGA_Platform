@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 from cgaforum.definitions import TopicStatus
 from registration.models import User
-from multi_relation.models import TaggedItem
+from multi_relation.models import TaggedItem, Message
 # Create your models here.
 
 
@@ -39,6 +40,7 @@ class Topic(models.Model):
     updated_time = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, verbose_name='Author')
     tags = models.ManyToManyField(to=TaggedItem, related_name='topic_tags')
+    replies = GenericRelation(Message)
 
     def __str__(self):
         return self.title[:30]
