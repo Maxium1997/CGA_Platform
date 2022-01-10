@@ -26,7 +26,7 @@ class SubCategory(models.Model):
         return self.name
 
     def get_latest_topics(self):
-        return self.topic_set.all().order_by('created_by')[:3]
+        return self.topic_set.all().order_by('-published_time')[:3]
 
 
 class Topic(models.Model):

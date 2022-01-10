@@ -20,7 +20,7 @@ CGA Forum
             <tbody>
                 {% for category in object_list %}
                 <tr>
-                    <td class="h3 fw-light pt-3 pb-3"><a href="{% url 'subcategories' category.slug %}" class="text-decoration-none">{{ category }}</a></td>
+                    <td class="pt-3 pb-3"><a href="{% url 'subcategories' category.slug %}" class="text-decoration-none">{{ category }}</a></td>
                     <td class="pt-3 pb-3">{{ category.subcategory_set.count }}</td>
                 </tr>
                 {% endfor %}

@@ -16,15 +16,19 @@ CGA Forum
         <table class="table table-striped">
             <thead>
                 <th class="col-6">Sub Category</th>
-                <th class="col-2">Topics</th>
-                <th class="col-4">Latest</th>
+                <th class="col-2 text-center">Topics</th>
+                <th class="col-4 text-center">Latest</th>
             </thead>
             <tbody>
                 {% for subcategory in object_list %}
                 <tr>
-                    <td class="h3 fw-light pt-3 pb-3">{{ subcategory }}</td>
-                    <td class="pt-3 pb-3">{{ subcategory.topic_set.count }}</td>
-                    <td class="pt-3 pb-3">{{ subcategory.get_latest_topics }}</td>
+                    <td class="pt-3 pb-3"><a href="{% url 'topics' category.slug subcategory.slug %}" class="text-decoration-none">{{ subcategory }}</a></td>
+                    <td class="pt-3 pb-3 text-center">{{ subcategory.topic_set.count }}</td>
+                    <td class="pt-3 pb-3">
+                        {% for topic in subcategory.get_latest_topics %}
+                        <p>{{ topic }}</p>
+                        {% endfor %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Forum
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgaforum' %}">CGA Forum</a></li>
+<li class="breadcrumb-item"><a href="{% url 'subcategories' category.slug %}">{{ category }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ subcategory }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <table class="table table-striped">
+            <thead>
+                <th class="col-6">Topic</th>
+                <th class="col-2 text-center">replies</th>
+                <th class="col-3 text-center">Activity</th>
+                <th class="col-1 text-center">Status</th>
+            </thead>
+            <tbody>
+                {% for topic in object_list %}
+                <tr>
+                    <td class="pt-3 pb-3">{{ topic }}</a></td>
+                    <td class="pt-3 pb-3 text-center"></td>
+                    <td class="pt-3 pb-3 text-center">{{ topic.published_time|date:"Y/m/d, H:i" }}</td>
+                    <td class="pt-3 pb-3 text-center">
+                        {% if topic.status == 1 %}
+                        <i class="bi bi-unlock-fill"></i>
+                        {% elif topic.status == 2 %}
+                        <i class="bi bi-lock-fill"></i>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
