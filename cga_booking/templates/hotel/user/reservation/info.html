@@ -32,6 +32,10 @@ CGA Booking
 
                 <div class="card mb-2">
                     <div class="card-body">
+                        {% if user == reservation.content_object.belongs2.manager %}
+                        <h6 class="fw-light text-muted">Customer</h6>
+                        <h4 class="card-text"><a href="#profile-check">{{ reservation.created_by.get_full_name }}</a></h4>
+                        {% endif %}
                         <h6 class="fw-light text-muted">Status</h6>
                         <h4 class="card-text">{{ reservation.status|to_readable_room_reservation_status:1 }}</h4>
                         <h6 class="fw-light text-muted">Payment</h6>
@@ -47,10 +51,10 @@ CGA Booking
 
                 <div class="card mb-2 text-center">
                     <div class="card-body">
-                        {% if user.is_superuser %}
-                        Neither customer nor hotel manager
-                        {% elif user == reservation.created_by %}
+                        {% if user == reservation.created_by %}
                         {% qr_from_text room_reservation_features_link size=10 %}
+                        {% elif user.is_superuser %}
+                        Neither customer nor hotel manager
                         {% elif user == reservation.content_object.belongs2.manager %}
                         <button type="button" class="btn btn-success">Pass</button>
                         <button type="button" class="btn btn-secondary">Fail</button>
