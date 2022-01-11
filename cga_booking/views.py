@@ -286,7 +286,9 @@ class RoomReservationInfoView(DetailView):
     def dispatch(self, request, *args, **kwargs):
         serial_number = self.kwargs.get('serial_number')
         room_reservation = RoomReservation.objects.get(serial_number=serial_number)
-        if self.request.user.is_superuser or (self.request.user == room_reservation.content_object.belongs2.manager):
+        if self.request.user.is_superuser or \
+                (self.request.user == room_reservation.created_by) or \
+                (self.request.user == room_reservation.content_object.belongs2.manager):
             return super(RoomReservationInfoView, self).dispatch(request, *args, **kwargs)
         elif not room_reservation.created_by == self.request.user:
             raise PermissionDenied
