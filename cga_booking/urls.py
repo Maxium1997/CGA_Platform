@@ -1,7 +1,8 @@
 from django.urls import path, include
 
 from cga_booking.views import HotelsView, HotelInfoView, HotelUpdateView, \
-    RoomAddView, RoomReservationView, RoomReservationInfoView,\
+    RoomAddView, RoomUpdateView, RoomReservationView, \
+    RoomReservationsView, RoomReservationInfoView, RoomReservationFeaturesView,\
     hotel_attraction_add
 
 urlpatterns = [
@@ -14,6 +15,9 @@ urlpatterns = [
             path('room/', include([
                 path('add', RoomAddView.as_view(), name='room_add'),
                 path('<pk>', RoomReservationView.as_view(), name='room_reservation'),
+                path('<pk>/', include([
+                    path('update', RoomUpdateView.as_view(), name='room_update'),
+                ]))
             ])),
 
             path('attraction/', include([
@@ -23,9 +27,11 @@ urlpatterns = [
     ])),
 
     path('<str:username>/', include([
+        path('reservations', RoomReservationsView.as_view(), name='room_reservations'),
         path('reservations/', include([
             path('<serial_number>/', include([
                 path('info', RoomReservationInfoView.as_view(), name='room_reservation_info'),
+                path('features', RoomReservationFeaturesView.as_view(), name='room_reservation_features'),
             ])),
         ])),
     ])),

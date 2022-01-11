@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load tz %}
+{% load qr_code %}
 {% load cga_booking_filters %}
 
 {% block title %}
@@ -9,7 +10,7 @@ CGA Booking
 
 {% block breadcrumb %}
 <li class="breadcrumb-item"><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
-<li class="breadcrumb-item"><a href="{% url 'reservations' user.username %}">Reservations</a></li>
+<li class="breadcrumb-item"><a href="{% url 'room_reservations' user.username %}">Reservations</a></li>
 <li class="breadcrumb-item active" aria-current="page">{{ reservation.serial_number }}</li>
 {% endblock %}
 
@@ -41,6 +42,22 @@ CGA Booking
                         <h4 class="card-text">{{ reservation.created_time|date:"Y/m/d H:i" }}</h4>
                         <h6 class="fw-light text-muted">Total</h6>
                         <h4 class="card-text">NT$ <span class="text-danger h1 fw-light">{{ reservation.price }}</span></h4>
+                    </div>
+                </div>
+
+                <div class="card mb-2 text-center">
+                    <div class="card-body">
+                        {% if user.is_superuser %}
+                        Neither customer nor hotel manager
+                        {% elif user == reservation.created_by %}
+                        {% qr_from_text room_reservation_features_link size=10 %}
+                        {% elif user == reservation.content_object.belongs2.manager %}
+                        <button type="button" class="btn btn-success">Pass</button>
+                        <button type="button" class="btn btn-secondary">Fail</button>
+                        <button type="button" class="btn btn-danger">Cancel</button>
+                        <button type="button" class="btn btn-warning">No Show</button>
+                        <button type="button" class="btn btn-info">Refunded</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

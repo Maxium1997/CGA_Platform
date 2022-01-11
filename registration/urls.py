@@ -1,8 +1,7 @@
 from django.urls import path, include
 
 from registration.views import Index, Login, Logout, Register, Profile, \
-    EmailConfirm, EmailConfirmSent, EmailConfirmDone, \
-    ReservationsView
+    EmailConfirm, EmailConfirmSent, EmailConfirmDone
 
 
 urlpatterns = [
@@ -23,6 +22,5 @@ urlpatterns = [
 
     path('<str:username>/', include([
         path('profile', Profile.as_view(), name='profile'),
-        path('reservations', ReservationsView.as_view(), name='reservations'),
     ])),
 ]

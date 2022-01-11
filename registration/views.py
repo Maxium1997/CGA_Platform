@@ -137,26 +137,3 @@ class EmailConfirmDone(TemplateView):
         context = super(EmailConfirmDone, self).get_context_data(**kwargs)
         context['tmp'] = kwargs.get('username')
         return context
-
-
-@method_decorator(login_required, name='dispatch')
-class ReservationsView(TemplateView):
-    template_name = 'user/reservations.html'
-    
-    def dispatch(self, request, *args, **kwargs):
-        return super(ReservationsView, self).dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super(ReservationsView, self).get_context_data(**kwargs)
-        if self.request.user.privilege == Privilege.Official.value[0]:
-            hotels = Hotel.objects.filter(manager=self.request.user)
-            rooms = []
-            for hotel in hotels:
-                rooms.extend(Room.objects.filter(belongs2=hotel))
-            room_reservations = []
-            for room in rooms:
-                room_reservations.extend(room.reservations.all())
-            context['room_reservations'] = room_reservations
-        else:
-            context['room_reservations'] = RoomReservation.objects.filter(created_by=self.request.user)
-        return context

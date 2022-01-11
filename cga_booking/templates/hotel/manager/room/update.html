@@ -9,7 +9,7 @@ CGA Booking
 <li class="breadcrumb-item"><a href="{% url 'hotels' %}">Hotel</a></li>
 <li class="breadcrumb-item"><a href="{% url 'hotel_info' hotel.slug %}">{{ hotel }}</a></li>
 <li class="breadcrumb-item"><a href="{% url 'hotel_update' hotel.slug %}">Edit</a></li>
-<li class="breadcrumb-item active" aria-current="page">Room Add</li>
+<li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
 {% endblock %}
 
 {% block body %}
@@ -20,10 +20,6 @@ CGA Booking
             <div class="col-12 table-responsive">
                 <table class="table table-striped">
                     <tbody>
-                        <tr>
-                            <td class="col-2 align-middle">Hotel</td>
-                            <td class="col-10 align-middle">{{ form.belongs2 }}</td>
-                        </tr>
                         <tr>
                             <td class="col-2 align-middle">Name</td>
                             <td class="col-10 align-middle">{{ form.name }}</td>
@@ -41,12 +37,12 @@ CGA Booking
                             <td class="col-10 align-middle">{{ form.double_bed }}</td>
                         </tr>
                         <tr>
-                            <td colspan="2">
-                                <button type="submit" class="btn btn-primary">Add</button>
-                                <button type="button" class="btn btn-secondary" onclick="history.back();">Cancel</button>
+                            <td colspan="2" class="align-middle">
+                                <button type="submit" class="btn btn-primary">Update</button>
                             </td>
                         </tr>
                     </tbody>
+                    {{ room.photos.all }}
                 </table>
             </div>
         </div>
