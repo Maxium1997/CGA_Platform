@@ -28,7 +28,11 @@ CGA Booking
                     <div class="card-body">
                         <h6 class="card-title fw-light">{{ reservation.content_object.belongs2.name }}｜{{ reservation.content_object }}</h6>
                         <p class="card-text h4">{{ reservation.start_time|date:"Y/m/d" }}<i class="bi bi-arrow-right bi-warning"></i>{{ reservation.end_time|date:"Y/m/d" }}</p>
+                        {% if reservation.start_time > now_time %}
                         <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'room_reservation_info' request.user.username reservation.serial_number %}'">detail</button>
+                        {% else %}
+                        <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'room_reservation_info' request.user.username reservation.serial_number %}'">detail</button>
+                        {% endif %}
                     </div>
                 </div>
                 {% empty %}

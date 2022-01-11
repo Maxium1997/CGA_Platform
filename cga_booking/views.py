@@ -249,7 +249,7 @@ class RoomReservationView(CreateView):
         return super(RoomReservationView, self).form_invalid(form)
 
     def get_success_url(self):
-        return reverse_lazy('reservations', kwargs={'username': self.request.user.username})
+        return reverse_lazy('room_reservations', kwargs={'username': self.request.user.username})
 
 
 @method_decorator(login_required, name='dispatch')
@@ -261,6 +261,7 @@ class RoomReservationsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RoomReservationsView, self).get_context_data(**kwargs)
+        context['now_time'] = datetime.now()
         if self.request.user.is_superuser:
             context['room_reservations'] = RoomReservation.objects.all()
 
@@ -308,27 +309,4 @@ class RoomReservationInfoView(DetailView):
                 self.request.user.username,
                 self.get_object().serial_number)
 
-        return context
-
-
-@method_decorator(login_required, name='dispatch')
-class RoomReservationFeaturesView(DetailView):
-    model = RoomReservation
-    template_name = 'hotel/manager/reservation/features.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        hotel = self.get_object().content_object.belongs2
-        if self.request.user.is_superuser or (self.request.user == hotel.manager):
-            return super(RoomReservationFeaturesView, self).dispatch(request, *args, **kwargs)
-        else:
-            raise PermissionDenied
-
-    def get_object(self, queryset=None):
-        serial_number = self.kwargs.get('serial_number')
-        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
-        return room_reservation
-
-    def get_context_data(self, **kwargs):
-        context = super(RoomReservationFeaturesView, self).get_context_data(**kwargs)
-        context['reservation'] = self.get_object()
         return context
