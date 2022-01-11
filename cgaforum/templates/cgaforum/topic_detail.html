@@ -25,7 +25,7 @@ CGA Forum
                 {% endfor %}
             </div>
         </div>
-        <div class="col-lg-4 col-12 border">
+        <div class="col-lg-4 col-12">
             {% for reply in topic.replies.all %}
             <div>
                 {% if reply.f.get_nickname %}
@@ -36,7 +36,7 @@ CGA Forum
                 <span class="text-muted">{{ reply.created_time }}</span></div>
             <div>{{ reply.content|linebreaks|safe }}</div>
             {% empty %}
-
+            <div>No reply recently.</div>
             {% endfor %}
         </div>
     </div>
