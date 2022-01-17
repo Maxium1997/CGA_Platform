@@ -2,10 +2,12 @@ import random
 import base64
 
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail
 
 from email.mime.text import MIMEText
 from smtplib import SMTP, SMTPAuthenticationError, SMTPException
 
+from CGA_Platform.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 from registration.models import User
 from cga_booking.models import Room, RoomReservation
 from cga_booking.definitions import ReservationStatus, ReservationUsages
@@ -150,3 +152,80 @@ def sent_reservation_info(customer: User, reservation: RoomReservation):
         hint = "郵件發送產生錯誤"
     server.quit()
     # 關閉連線
+
+
+def sent_reservation_mail(reservation: RoomReservation, recipient: User):
+    subject = "訂單編號#" + reservation.serial_number + "｜{}｜CGA Booking"
+    mail_content = ''
+    reserved_room = reservation.content_object
+
+    if reservation.status == ReservationStatus.Pending.value[0]:
+        subject = "訂單編號#" + reservation.serial_number + "｜Pending｜CGA Booking"
+
+        if recipient == reservation.created_by:
+            mail_content = "Dear Customer, Greeting from CGA Platform\n\n" + \
+                           "With reference to your reservation Serial Number " + reservation.serial_number + " as detailed below:\n\n" + \
+                           "名稱Hotel：" + reserved_room.belongs2.name + "\n" + \
+                           "地址Address：" + reserved_room.belongs2.address + "\n" + \
+                           "房型Room：" + reserved_room.name + "\n" + \
+                           "入住Check In：" + reservation.start_time.strftime("%Y/%m/%d") + "\n" + \
+                           "退房Check Out：" + reservation.end_time.strftime("%Y/%m/%d") + "\n" + \
+                           "用途Usage：" + list(ReservationUsages.__members__.values())[reservation.usage - 1].value[
+                               1] + "\n" + \
+                           "訂單狀態Status：" + list(ReservationStatus.__members__.values())[reservation.status - 1].value[
+                               1] + "\n" + \
+                           "付款狀態Payment Status：" + \
+                           list(PaymentStatus.__members__.values())[reservation.payment_status - 1].value[
+                               1] + "\n\n" + \
+                           "You can press the following link to check your reservation detail, " + \
+                           "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
+                           "or you can press here to cancel your reservation, " + \
+                           "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/cancel\n\n" + \
+                           "Hope we can meet in time. If you have any problem, please contact us with the mail " + \
+                           reserved_room.belongs2.contact_email + "\n" + \
+                           "or you can call the phone " + reserved_room.belongs2.contact_phone + "\n\n" + \
+                           "Hope you have a nice trip.\n\n" + "Regards, CGA Platform Developer. dW."
+
+        elif recipient == reserved_room.belongs2.manager:
+            mail_content = "Dear Manager, Greeting from CGA Platform\n\n" + \
+                           "With reference to your managed hotel " + reserved_room.belongs2.name + " as detailed below:\n\n" + \
+                           "名稱Hotel：" + reserved_room.belongs2.name + "\n" + \
+                           "地址Address：" + reserved_room.belongs2.address + "\n" + \
+                           "房型Room：" + reserved_room.name + "\n" + \
+                           "入住Check In：" + reservation.start_time.strftime("%Y/%m/%d") + "\n" + \
+                           "退房Check Out：" + reservation.end_time.strftime("%Y/%m/%d") + "\n" + \
+                           "用途Usage：" + list(ReservationUsages.__members__.values())[reservation.usage - 1].value[
+                               1] + "\n" + \
+                           "訂單狀態Status：" + list(ReservationStatus.__members__.values())[reservation.status - 1].value[
+                               1] + "\n" + \
+                           "付款狀態Payment Status：" + \
+                           list(PaymentStatus.__members__.values())[reservation.payment_status - 1].value[
+                               1] + "\n\n" + \
+                           "Please press the following link to check the reservation detail, " + \
+                           "https://cgaplatform.pythonanywhere.com/reservation/" + reservation.serial_number + "/info\n\n" + \
+                           "Regards, CGA Platform Developer. dW."
+    elif reservation.status == ReservationStatus.Passed.value[0]:
+        subject = "訂單編號#" + reservation.serial_number + "｜Passed｜CGA Booking"
+    elif reservation.status == ReservationStatus.Canceled.value[0]:
+        subject = "訂單編號#" + reservation.serial_number + "｜Canceled｜CGA Booking"
+    else:
+        pass
+
+    msg = MIMEText(mail_content)
+    msg["Subject"] = subject    # 郵件標題
+    mail_to = recipient.email
+
+    server = SMTP("smtp.gmail.com:587")     # 建立連線
+    # server = SMTP(strSmtp)
+    server.ehlo()   # 跟主機溝通
+    server.starttls()   # TTLS安全驗證
+
+    try:
+        server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+        server.sendmail(EMAIL_HOST_USER, mail_to, msg.as_string())
+        hint = "郵件已發送"
+    except SMTPAuthenticationError:
+        hint = "無法登入"
+    except:
+        hint = "郵件發送產生錯誤"
+    server.quit()   # 關閉連線
