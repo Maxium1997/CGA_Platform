@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Case
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active" aria-current="page">CGA Case</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        {% for category in object_list %}
+        <div class="col-12 pt-2 pb-2">
+            <h3 class="fw-light" style="cursor:pointer; color: dark" onclick="window.location.href='{% url 'case_sections' category.name %}'">{{ category }}</h3>
+            {% for section in category.casesection_set.all %}
+            <span class="badge rounded-pill bg-secondary fw-light">#{{ section }}</span>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
