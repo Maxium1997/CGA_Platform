@@ -16,6 +16,11 @@ CGA Case
         {% for section in object_list %}
         <div class="col-12 pt-2 pb-2">
             <h3 class="fw-light">{{ section }}</h3>
+            <ul>
+                {% for case in section.case_set.all %}
+                <li><a href="{% url 'case_detail' case.title %}" class="text-decoration-none">{{ case }}</a></li>
+                {% endfor %}
+            </ul>
         </div>
         {% endfor %}
     </div>

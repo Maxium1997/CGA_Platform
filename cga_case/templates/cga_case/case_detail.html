@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Case
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgacase' %}">CGA Case</a></li>
+<li class="breadcrumb-item"><a href="{% url 'case_sections' category %}">{{ category }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ object }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div>
+            <h3>{{ object.serial_number }}.{{ object.title }}</h3>
+        </div>
+        <div>
+            <h3>Legal Source</h3>
+            <ul type="1">
+                {% for lr in object.legal_resources.all %}
+                <li onclick="window.open('{{ lr.source_url }}')" style="color: blue;">{{ lr }}</li>
+                <p>
+                    {{ lr.content|linebreaks|safe }}
+                </p>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h3>Handling Points</h3>
+            <p>{{ object.handling_point|linebreaks|safe }}</p>
+        </div>
+        <div>
+            <h3>Cautions</h3>
+            <p>{{ object.cautions|linebreaks|safe }}</p>
+        </div>
+        <div>
+            <h3>Flow Chart</h3>
+            {% if object.flow_chart %}
+            <img src="{{ object.flow_chart.url }}" class="d-block w-100" alt="{{ object }}" onclick="window.open('{{ object.flow_chart.url }}')" style="cursor: pointer;">
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
