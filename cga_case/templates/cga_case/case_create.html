@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Case
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgacase' %}">CGA Case</a></li>
+<li class="breadcrumb-item"><a href="{% url 'case_sections' category.name %}">{{ category }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ section }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.title }}
+            <button type="submit" class="btn btn-primary">Create</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

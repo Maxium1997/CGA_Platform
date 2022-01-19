@@ -1,5 +1,6 @@
 import os
 from django.db import models
+from django.urls import reverse_lazy
 
 # Create your models here.
 
@@ -40,6 +41,9 @@ class Case(models.Model):
     handling_point = models.TextField(null=True)
     cautions = models.TextField(null=True)
     flow_chart = models.ImageField(upload_to=case_flow_chart_upload_path, null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse_lazy('case_update', kwargs={'case_title': self.title})
 
     def __str__(self):
         return self.title

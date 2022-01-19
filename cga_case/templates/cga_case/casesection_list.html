@@ -21,6 +21,7 @@ CGA Case
                 {% for case in section.case_set.all %}
                 <li><a href="{% url 'case_update' case.title %}" class="text-decoration-none">{{ case }}</a></li>
                 {% endfor %}
+                <li><a href="{% url 'case_create' section.name %}">new+</a></li>
                 {% else %}
                 {% for case in section.case_set.all %}
                 <li><a href="{% url 'case_detail' case.title %}" class="text-decoration-none">{{ case }}</a></li>
