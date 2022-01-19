@@ -72,6 +72,12 @@ class CaseCreateView(CreateView):
     fields = ['title']
     template_name = 'cga_case/case_create.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            return super(CaseCreateView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CaseCreateView, self).get_context_data(object_list=None, **kwargs)
         case_section = get_object_or_404(CaseSection, name=self.kwargs.get('case_section_name'))
