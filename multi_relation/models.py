@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
-from multi_relation.definitions import Status, PaymentStatus
+from multi_relation.definitions import Status, PaymentStatus, MessageStatus
 from registration.models import User
 
 # Create your models here.
@@ -48,3 +48,23 @@ class Reservation(models.Model):
                                                       default=PaymentStatus.Unpaid.value[0])
 
     created_time = models.DateTimeField(auto_now_add=True)
+
+
+class Message(models.Model):
+    f = models.ForeignKey(User, verbose_name='sender', on_delete=models.CASCADE)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    t = GenericForeignKey('content_type', 'object_id')
+
+    STATUS_CHOICES = [(_.value[0], _.value[1]) for _ in MessageStatus.__members__.values()]
+    status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES,
+                                              default=MessageStatus.Sent.value[0])
+
+    content = models.TextField()
+    created_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.content
+
+    class Meta:
+        ordering = ['-created_time']

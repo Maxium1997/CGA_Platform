@@ -69,6 +69,9 @@ class SuperuserProfileForm(UserChangeForm):
         self.fields['last_name'] = forms.CharField(required=False,
                                                    widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                                  'placeholder': "Last name"}))
+        self.fields['nickname'] = forms.CharField(required=False,
+                                                   widget=forms.TextInput(attrs={'class': 'form-control border-0',
+                                                                                 'placeholder': "Nickname"}))
         self.fields['email'] = forms.CharField(required=True,
                                                widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                              'placeholder': "Email"}))
@@ -97,7 +100,7 @@ class SuperuserProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender',
+        fields = ['ID_Number', 'first_name', 'last_name', 'nickname', 'email', 'phone', 'identity', 'birthday', 'gender',
                   'privilege', 'introduction']
 
     def save(self, commit=True):
@@ -119,6 +122,9 @@ class ProfileForm(UserChangeForm):
         self.fields['last_name'] = forms.CharField(required=False,
                                                    widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                                  'placeholder': "Last name"}))
+        self.fields['nickname'] = forms.CharField(required=False,
+                                                   widget=forms.TextInput(attrs={'class': 'form-control border-0',
+                                                                                 'placeholder': "Nickname"}))
         self.fields['email'] = forms.CharField(required=True,
                                                widget=forms.TextInput(attrs={'class': 'form-control border-0',
                                                                              'placeholder': "Email"}))
@@ -143,7 +149,7 @@ class ProfileForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['ID_Number', 'first_name', 'last_name', 'email', 'phone', 'identity', 'birthday', 'gender',
+        fields = ['ID_Number', 'first_name', 'last_name', 'nickname', 'email', 'phone', 'identity', 'birthday', 'gender',
                   'introduction']
 
     def save(self, commit=True):
