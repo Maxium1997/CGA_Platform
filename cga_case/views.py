@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
@@ -61,6 +62,41 @@ class CaseUpdateView(UpdateView):
     def get_object(self, queryset=None):
         return get_object_or_404(Case, title=self.kwargs.get('case_title'))
 
+    def form_valid(self, form):
+        messages.success(self.request, "Updated successfully.")
+        return super(CaseUpdateView, self).form_valid(form)
+
+    def get_success_url(self):
+        case = self.get_object()
+        return reverse_lazy('case_update', kwargs={'case_title': case.title})
+
+
+@method_decorator(login_required, name='dispatch')
+class CaseLRUpdateView(UpdateView):
+    model = Case
+    fields = ['legal_resources']
+    template_name = 'cga_case/case_lr_update.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_superuser:
+            return super(CaseLRUpdateView, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CaseLRUpdateView, self).get_context_data(object_list=None, **kwargs)
+        case = get_object_or_404(Case, title=self.kwargs.get('case_title'))
+        context['category'] = case.is_one_of.is_part_of
+        context['selected_lr_ids'] = [_.pk for _ in case.legal_resources.all()]
+        return context
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Case, title=self.kwargs.get('case_title'))
+
+    def form_valid(self, form):
+        messages.success(self.request, "Updated successfully.")
+        return super(CaseLRUpdateView, self).form_valid(form)
+
     def get_success_url(self):
         case = self.get_object()
         return reverse_lazy('case_update', kwargs={'case_title': case.title})
@@ -69,7 +105,7 @@ class CaseUpdateView(UpdateView):
 @method_decorator(login_required, name='dispatch')
 class CaseCreateView(CreateView):
     model = Case
-    fields = ['title']
+    fields = ['serial_number', 'title']
     template_name = 'cga_case/case_create.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -98,5 +134,6 @@ class CaseCreateView(CreateView):
         case = form.instance
         case.is_one_of = self.get_initial().get('is_one_of')
         case.save()
+        messages.success(self.request, 'Case created successfully: {}. Please update the content.'.format(case.title))
         return super(CaseCreateView, self).form_valid(form)
 

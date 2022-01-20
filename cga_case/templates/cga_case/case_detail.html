@@ -14,10 +14,10 @@ CGA Case
 {% block body %}
 <div class="container">
     <div class="row">
-        <div>
+        <div class="col-12">
             <h3>{{ object.serial_number }}.{{ object.title }}</h3>
         </div>
-        <div>
+        <div class="col-12">
             <h3>Legal Source</h3>
             <ul type="1">
                 {% for lr in object.legal_resources.all %}
@@ -28,15 +28,15 @@ CGA Case
                 {% endfor %}
             </ul>
         </div>
-        <div>
+        <div class="col-12">
             <h3>Handling Points</h3>
             <p>{{ object.handling_point|linebreaks|safe }}</p>
         </div>
-        <div>
+        <div class="col-12">
             <h3>Cautions</h3>
             <p>{{ object.cautions|linebreaks|safe }}</p>
         </div>
-        <div>
+        <div class="col-12">
             <h3>Flow Chart</h3>
             {% if object.flow_chart %}
             <img src="{{ object.flow_chart.url }}" class="d-block w-50" alt="{{ object }}" onclick="window.open('{{ object.flow_chart.url }}')" style="cursor: pointer;">

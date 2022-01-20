@@ -16,8 +16,21 @@ CGA Case
     <div class="row">
         <form method="post">
             {% csrf_token %}
-            {{ form.title }}
-            <button type="submit" class="btn btn-primary">Create</button>
+            <table class="table table-striped">
+                <tr>
+                    <td>{{ form.serial_number.label }}</td>
+                    <td>{{ form.serial_number }}</td>
+                </tr>
+                <tr>
+                    <td>{{ form.title.label }}</td>
+                    <td>{{ form.title }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </td>
+                </tr>
+            </table>
         </form>
     </div>
 </div>

@@ -25,6 +25,9 @@ class LR(models.Model):
     source_url = models.URLField(unique=True)
     content = models.TextField()
 
+    class Meta:
+        ordering = ['title']
+
     def __str__(self):
         return self.title
 

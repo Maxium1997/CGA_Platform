@@ -16,10 +16,10 @@ CGA Case
     <div class="row">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <div>
+            <div class="col-12">
                 <h3>{{ object.serial_number }}.{{ object.title }}</h3>
             </div>
-            <div>
+            <div class="col-12">
                 <h3>Legal Source</h3>
                 <ul type="1">
                     {% for lr in object.legal_resources.all %}
@@ -28,24 +28,25 @@ CGA Case
                         {{ lr.content|linebreaks|safe }}
                     </p>
                     {% endfor %}
+                    <li><a href="{% url 'case_lr_update' case.title %}">Add+</a></li>
                 </ul>
             </div>
-            <div>
+            <div class="col-12">
                 <h3>Handling Points</h3>
                 <p>{{ form.handling_point }}</p>
             </div>
-            <div>
+            <div class="col-12">
                 <h3>Cautions</h3>
                 <p>{{ form.cautions }}</p>
             </div>
-            <div>
+            <div class="col-12">
                 <h3>Flow Chart</h3>
                 {% if object.flow_chart %}
                 <img src="{{ object.flow_chart.url }}" class="d-block w-50" alt="{{ object }}" onclick="window.open('{{ object.flow_chart.url }}')" style="cursor: pointer;">
                 {% endif %}
                 <p>{{ form.flow_chart }}</p>
             </div>
-            <div>
+            <div class="col-12">
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
         </form>
