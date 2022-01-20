@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('ocean_station.urls')),
     path('', include('cga_booking.urls')),
     path('', include('cgaforum.urls')),
+    path('', include('cga_case.urls')),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

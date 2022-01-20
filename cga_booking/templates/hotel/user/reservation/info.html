@@ -34,7 +34,11 @@ CGA Booking
                     <div class="card-body">
                         {% if user == reservation.content_object.belongs2.manager %}
                         <h6 class="fw-light text-muted">Customer</h6>
+                        {% if reservation.created_by.get_full_name %}
                         <h4 class="card-text"><a href="#profile-check">{{ reservation.created_by.get_full_name }}</a></h4>
+                        {% else %}
+                        <h4 class="card-text"><a href="#profile-check">{{ reservation.created_by.username }}</a></h4>
+                        {% endif %}
                         {% endif %}
                         <h6 class="fw-light text-muted">Status</h6>
                         <h4 class="card-text">{{ reservation.status|to_readable_room_reservation_status:1 }}</h4>

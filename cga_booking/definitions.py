@@ -13,7 +13,7 @@ class ReservationUsages(Enum):
 class ReservationStatus(Enum):
     Pending = (1, 'Pending', "審查中")
     Passed = (2, 'Passed', "審查通過")
-    Failed = (3, 'Failed', "審核失敗")
+    Rejected = (3, 'Rejected', "審核拒絕")
     Canceled = (4, 'Canceled', '此訂單已取消')
     CheckedIn = (5, 'Check In', "已入住")
     NoShow = (6, 'No Show', '未入住')

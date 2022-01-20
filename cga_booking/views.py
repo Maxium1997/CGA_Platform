@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, TemplateView
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 from datetime import date, datetime, timedelta
 
@@ -14,7 +16,7 @@ from cga_booking.models import Hotel, Room, RoomReservation
 from cga_booking.definitions import ContentFlag, ReservationUsages, ReservationStatus
 from cga_booking.forms import HotelUpdateForm, HotelAttractionAddForm
 from cga_booking.decorators import reservation_time_validate
-from CGA_Platform.email import sent_reservation_info
+from CGA_Platform.email import sent_reservation_info, sent_reservation_mail
 from registration.models import User
 from registration.definitions import Privilege
 
@@ -242,7 +244,8 @@ class RoomReservationView(CreateView):
         form.instance.price = reserved_room.price
 
         form.save()
-        sent_reservation_info(form.instance.created_by, form.instance)
+        sent_reservation_mail(reservation=form.instance, recipient=form.instance.created_by)
+        sent_reservation_mail(reservation=form.instance, recipient=reserved_room.belongs2.manager)
         return super(RoomReservationView, self).form_valid(form)
 
     def form_invalid(self, form):
@@ -261,6 +264,7 @@ class RoomReservationsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(RoomReservationsView, self).get_context_data(**kwargs)
+        context['request_user_is_official'] = self.request.user.privilege == Privilege.Official.value[0]
         context['now_time'] = datetime.now()
         if self.request.user.is_superuser:
             context['room_reservations'] = RoomReservation.objects.all()
@@ -269,13 +273,44 @@ class RoomReservationsView(TemplateView):
             hotels = Hotel.objects.filter(manager=self.request.user)
             room_ids = [_.id for _ in Room.objects.filter(belongs2__in=hotels)]
             room_type = ContentType.objects.get(model='room')
-            room_reservations = RoomReservation.objects.filter(content_type=room_type,
-                                                               object_id__in=room_ids).order_by('start_time', 'end_time')
+            # filter_criteria = Q(content_type=room_type) & Q(object_id__in=room_ids)
+            filter_criteria = Q(content_type=room_type) & Q(object_id__in=room_ids)
+            room_reservations = RoomReservation.objects.filter(filter_criteria).order_by('start_time', 'end_time')
             context['room_reservations'] = room_reservations
+            context['room_ids'] = room_ids
 
         else:
             context['room_reservations'] = RoomReservation.objects.filter(created_by=self.request.user)
         return context
+    
+    
+@method_decorator(login_required, name='dispatch')
+class RoomReservationRelocatingView(ListView):
+    model = RoomReservation
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.privilege != Privilege.Official.value[0]:
+            raise PermissionDenied
+        else:
+            return super(RoomReservationRelocatingView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+        now_time = datetime.now()
+        if self.request.user.is_superuser:
+            room_reservations = RoomReservation.objects.all()
+
+        elif self.request.user.privilege == Privilege.Official.value[0]:
+            hotels = Hotel.objects.filter(manager=self.request.user)
+            room_ids = [_.id for _ in Room.objects.filter(belongs2__in=hotels)]
+            room_type = ContentType.objects.get(model='room')
+            room_reservations = RoomReservation.objects.filter(content_type=room_type,
+                                                               object_id__in=room_ids).order_by('start_time',
+                                                                                                'end_time')
+            room_reservations = room_reservations
+
+        else:
+            room_reservations = RoomReservation.objects.filter(created_by=self.request.user)
+        return room_reservations
 
 
 @method_decorator(login_required, name='dispatch')
@@ -312,3 +347,70 @@ class RoomReservationInfoView(DetailView):
                 self.get_object().serial_number)
 
         return context
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationPassedView(UpdateView):
+    model = RoomReservation
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationRejectedView(UpdateView):
+    model = RoomReservation
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationCanceledView(UpdateView):
+    model = RoomReservation
+    fields = ['status']
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+    
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user != self.get_object().created_by:
+            raise PermissionDenied
+        else:
+            return super(RoomReservationCanceledView, self).dispatch(request, *args, **kwargs)
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationCheckInView(UpdateView):
+    model = RoomReservation
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationNoShowView(UpdateView):
+    model = RoomReservation
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation
+
+
+@method_decorator(login_required, name='dispatch')
+class RoomReservationCheckOutView(UpdateView):
+    model = RoomReservation
+
+    def get_object(self, queryset=None):
+        serial_number = self.kwargs.get('serial_number')
+        room_reservation = RoomReservation.objects.get(serial_number=serial_number)
+        return room_reservation

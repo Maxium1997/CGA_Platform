@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&if!g=%j#26wv__%l^31)pte%9ne_4otkmdxu_h%&k677%1c8@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',
                  'cgaplatform.pythonanywhere.com']
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'ocean_station',
     'cga_booking',
     'cgaforum',
+    'cga_case'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,6 @@ AUTH_USER_MODEL = 'registration.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers' + '.PickleSerializer'
+
+EMAIL_HOST_USER = 'cgaplatform@gmail.com'
+EMAIL_HOST_PASSWORD = 'CGAplateform86925'
