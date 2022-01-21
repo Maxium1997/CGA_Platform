@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from django.urls import reverse_lazy
 
 
 from cgaforum.definitions import TopicStatus
@@ -32,8 +33,7 @@ class SubCategory(models.Model):
 
 class Topic(models.Model):
     f = models.ForeignKey(to=SubCategory, on_delete=models.PROTECT, null=False)
-    title = models.CharField(max_length=255)
-    subtitle = models.CharField(max_length=500)
+    title = models.CharField(max_length=512, unique=True)
     content = models.TextField()
     status = models.PositiveIntegerField(default=TopicStatus.Published.value[0])
     published_time = models.DateTimeField(auto_now_add=True)
@@ -41,6 +41,10 @@ class Topic(models.Model):
     created_by = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, verbose_name='Author')
     tags = models.ManyToManyField(to=TaggedItem, related_name='topic_tags')
     replies = GenericRelation(Message)
+
+    def get_absolute_url(self):
+        return reverse_lazy('topics', kwargs={'category_slug': self.f.f,
+                                              'subcategory_slug': self.f.slug})
 
     def __str__(self):
         return self.title[:30]

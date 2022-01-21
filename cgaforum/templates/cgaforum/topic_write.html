@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+CGA Forum
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgaforum' %}">CGA Forum</a></li>
+<li class="breadcrumb-item"><a href="{% url 'subcategories' category.slug %}">{{ category }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'topics' category.slug subcategory.slug %}">{{ subcategory }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">Write</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <form method="post">
+            {% csrf_token %}
+            <div>
+                <table>
+                    <tr>
+                        <td>{{ form.title.label }}</td>
+                        <td>{{ form.title }}</td>
+                    </tr>
+                    <tr>
+                        <td>{{ form.content.label }}</td>
+                        <td>{{ form.content }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-primary">Publish</button>
+                <button type="button" class="btn btn-secondary" onclick="history.back();">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
