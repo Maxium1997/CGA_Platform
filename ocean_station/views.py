@@ -28,6 +28,27 @@ class OceanStationsView(ListView):
         station_info_links = ['https://cgaplatform.pythonanywhere.com/ocean_station/{}/info'.format(_.slug) for _ in stations]
         context['stations'] = zip(station_info_links, stations)
         context['regions'] = [[_.value[0], _.value[1], _.value[2]] for _ in Region.__members__.values()][1:]
+
+        # stations = Station.objects.all()
+        # contents = ""
+        # for station in stations:
+        #     tmp = ""
+        #     station_contents = Content.objects.filter(object_id=station.id).\
+        #         exclude(Q(content_flag=ContentFlag.Overview.value[0])|Q(content_flag=ContentFlag.TrafficInfo.value[0]))
+        #     for content in station_contents:
+        #         tmp += content.description+"\n"
+        #     station.introductions = tmp
+        #     station.save()
+        #     contents += tmp + "\n\n"
+        #
+        # for station in stations:
+        #     try:
+        #         station_overview = Content.objects.get(Q(object_id=station.id)&Q(content_flag=ContentFlag.Overview.value[0]))
+        #         station.overview = station_overview.description
+        #         station.save()
+        #     except ObjectDoesNotExist:
+        #         pass
+
         return context
 
 
@@ -50,11 +71,6 @@ class StationInfoView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(StationInfoView, self).get_context_data(**kwargs)
-        try:
-            context['overviews'] = self.get_object(). \
-                introductions.filter(content_flag=ContentFlag.Overview.value[0]).order_by('sequence', 'id')
-        except ObjectDoesNotExist:
-            context['overviews'] = None
 
         try:
             filter_criteria = Q(photo_flag=PhotoFlag.Main.value[0]) | Q(photo_flag=PhotoFlag.Display.value[0])
@@ -62,30 +78,6 @@ class StationInfoView(DetailView):
                 album.filter(filter_criteria)
         except ValueError:
             context['album'] = None
-
-        try:
-            context['contents'] = self.get_object().\
-                introductions.filter(content_flag=ContentFlag.Content.value[0]).order_by('sequence', 'id')
-        except ObjectDoesNotExist:
-            context['contents'] = None
-
-        try:
-            context['traffic_info'] = self.get_object().\
-                introductions.filter(content_flag=ContentFlag.TrafficInfo.value[0])
-        except ObjectDoesNotExist:
-            context['traffic_info'] = None
-
-        try:
-            context['cautions'] = self.get_object().\
-                introductions.filter(content_flag=ContentFlag.Cautions.value[0])
-        except ObjectDoesNotExist:
-            context['cautions'] = None
-
-        try:
-            context['others'] = self.get_object().\
-                introductions.filter(content_flag=ContentFlag.Other.value[0])
-        except ObjectDoesNotExist:
-            context['others'] = None
 
         try:
             context['region_stations'] = Station.objects.\

@@ -2,6 +2,7 @@ import os
 
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
+from ckeditor.fields import RichTextField
 
 from registration.models import User
 from ocean_station.definitions import Region, ContentFlag, PhotoFlag
@@ -56,7 +57,9 @@ class Station(models.Model):
     contact_phone = models.CharField(max_length=255)                            # 聯絡電話
     fans_page_url = models.URLField(null=True, blank=True)                      # 粉絲專頁網址
     attractions = GenericRelation(TaggedAttraction)                             # 景點
-    introductions = GenericRelation(Content)                                    # 海洋驛站相關訊息內容
+    # introductions = GenericRelation(Content)                                  # 海洋驛站相關訊息內容
+    overview = models.TextField(default=None, null=True)
+    introductions = RichTextField(default=None, null=True)
     album = GenericRelation(Photo)                                              # 相簿
 
     def get_main_photo(self):

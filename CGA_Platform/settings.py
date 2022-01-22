@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'qr_code',
+    'ckeditor',
     'registration',
     'multi_relation',
     'ocean_station',

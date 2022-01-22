@@ -68,11 +68,9 @@ Ocean Station
             </div>
             {% endif %}
         </div>
-        {% if overviews %}
+        {% if station.overview %}
         <div class="col-md-6 h5 fw-light">
-            {% for overview in overviews %}
-            <p>{{ overview.description|linebreaks|safe }}</p>
-            {% endfor %}
+            <p>{{ station.overview|linebreaks|safe }}</p>
         </div>
         {% endif %}
     </div>
@@ -128,48 +126,44 @@ Ocean Station
                         <td class="col-2 align-middle">Fans Page/Website</td>
                         <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ station.fans_page_url }}</a></td>
                     </tr>
-                    {% if traffic_info %}
-                    <tr>
-                        <td class="col-2">Traffic</td>
-                        <td class="col-10">
-                            {% for info in traffic_info %}
-                            <p>{{ info.description|linebreaks|safe }}</p>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    {% endif %}
                 </tbody>
             </table>
         </div>
     </div>
 
-    {% if contents %}
     <div class="row">
         <div>
-            {% for content in contents %}
-            <p>{{ content.description|linebreaks|safe }}</p>
-            {% endfor %}
+            <p>{{ station.introductions|linebreaks|safe }}</p>
         </div>
     </div>
-    {% endif %}
 
-    {% if cautions %}
-    <div class="row border-top pt-2">
-        <h3>Cautions</h3>
-        {% for caution in cautions %}
-        <p>{{ caution.description|linebreaks|safe }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
+<!--    {% if contents %}-->
+<!--    <div class="row">-->
+<!--        <div>-->
+<!--            {% for content in contents %}-->
+<!--            <p>{{ content.description|linebreaks|safe }}</p>-->
+<!--            {% endfor %}-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {% endif %}-->
 
-    {% if others %}
-    <div class="row border-top pt-2">
-        <h3>Others</h3>
-        {% for other in others %}
-        <p>{{ other.description|linebreaks|safe }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
+<!--    {% if cautions %}-->
+<!--    <div class="row border-top pt-2">-->
+<!--        <h3>Cautions</h3>-->
+<!--        {% for caution in cautions %}-->
+<!--        <p>{{ caution.description|linebreaks|safe }}</p>-->
+<!--        {% endfor %}-->
+<!--    </div>-->
+<!--    {% endif %}-->
+
+<!--    {% if others %}-->
+<!--    <div class="row border-top pt-2">-->
+<!--        <h3>Others</h3>-->
+<!--        {% for other in others %}-->
+<!--        <p>{{ other.description|linebreaks|safe }}</p>-->
+<!--        {% endfor %}-->
+<!--    </div>-->
+<!--    {% endif %}-->
 
     {% if region_stations %}
     <div class="row justify-content-center border-top pt-2">
