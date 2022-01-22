@@ -14,6 +14,10 @@ CGA Case
 {% block body %}
 <div class="container">
     <div class="row">
+        <div class="col-12">
+            <a href="{% url 'case_detail' case.title %}" class="btn btn-secondary">View</a>
+        </div>
+
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="col-12">
@@ -21,23 +25,24 @@ CGA Case
             </div>
             <div class="col-12">
                 <h3>Legal Source</h3>
-                <ul type="1">
-                    {% for lr in object.legal_resources.all %}
-                    <li onclick="window.open('{{ lr.source_url }}')" style="color: blue;">{{ lr }}</li>
-                    <p>
-                        {{ lr.content|linebreaks|safe }}
-                    </p>
-                    {% endfor %}
-                    <li><a href="{% url 'case_lr_update' case.title %}">Add+</a></li>
-                </ul>
+                <p>{{form.media}}{{ form.legal_resources }}</p>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-12">
                 <h3>Handling Points</h3>
-                <p>{{ form.handling_point }}</p>
+                <p>{{form.media}}{{ form.handling_point }}</p>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-12">
                 <h3>Cautions</h3>
-                <p>{{ form.cautions }}</p>
+                <p>{{form.media}}{{ form.cautions }}</p>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Update</button>
             </div>
             <div class="col-12">
                 <h3>Flow Chart</h3>

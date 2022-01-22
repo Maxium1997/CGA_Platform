@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from cga_case.models import CaseCategory, CaseSection, Case, LR
+from cga_case.models import CaseCategory, CaseSection, Case
 
 # Register your models here.
 
@@ -18,8 +18,3 @@ class CaseSectionAdmin(admin.ModelAdmin):
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
     list_display = ['serial_number', 'title']
-
-
-@admin.register(LR)
-class LRAdmin(admin.ModelAdmin):
-    list_display = ['title', 'source_url']
