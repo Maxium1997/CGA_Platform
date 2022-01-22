@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load definitions_filters %}
+
+{% block title %}
+CGA Forum
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
+<li class="breadcrumb-item active" aria-current="page">My Topics</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!--Room reservation-->
+        <h3 class="fw-light align-middle">Topics</h3>
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead class="text-center">
+                    <th class="col-1">Cate</th>
+                    <th class="col-5">Title</th>
+                    <th class="col-1">Replies</th>
+                    <th class="col-1">Status</th>
+                    <th class="col-1">Publish</th>
+                    <th class="col-1">Update</th>
+                    <th class="col-1"></th>
+                </thead>
+                <tbody class="text-center">
+                {% for topic in object_list %}
+                    <tr>
+                        <td>{{ topic.f }}</td>
+                        <td>{{ topic.title }}</td>
+                        <td>{{ topic.replies.all.count }}</td>
+                        <td>{{ topic.status|to_readable_topic_status:1 }}</td>
+                        <td>{{ topic.published_time|date:"Y/m/d H:i" }}</td>
+                        <td>{{ topic.updated_time|date:"Y/m/d H:i" }}</td>
+                        <td>
+                            <i class="bi bi-pen-fill" onclick="window.location.href='{% url 'topic_edit' topic.f.f.slug topic.f.slug topic.pk %}'"></i>
+                            <i class="bi bi-blockquote-left" onclick="window.location.href='{% url 'topic' topic.f.f.slug topic.f.slug topic.pk %}'"></i>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

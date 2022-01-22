@@ -25,7 +25,7 @@ CGA Forum
                 {% for topic in object_list %}
                 <tr>
                     <td class="pt-3 pb-3"><a href="{% url 'topic' topic.f.f.slug topic.f.slug topic.pk %}" class="text-decoration-none">{{ topic }}</a></td>
-                    <td class="pt-3 pb-3 text-center"></td>
+                    <td class="pt-3 pb-3 text-center">{{ topic.replies.all.count }}</td>
                     <td class="pt-3 pb-3 text-center">{{ topic.published_time|date:"Y/m/d, H:i" }}</td>
                     <td class="pt-3 pb-3 text-center">
                         {% if topic.status == 1 %}

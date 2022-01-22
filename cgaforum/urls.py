@@ -2,7 +2,7 @@ from django.urls import path, include
 
 
 from cgaforum.views import CategoriesView, SubCategoriesView, \
-    TopicsView, TopicView, TopicWriteView
+    MyTopicsView, TopicsView, TopicView, TopicWriteView, TopicEditView
 
 
 urlpatterns = [
@@ -15,8 +15,13 @@ urlpatterns = [
                 path('write', TopicWriteView.as_view(), name='topic_write'),
                 path('<pk>/', include([
                     path('detail', TopicView.as_view(), name='topic'),
+                    path('edit', TopicEditView.as_view(), name='topic_edit'),
                 ])),
             ])),
         ])),
-    ]))
+    ])),
+
+    path('<str:username>/', include([
+        path('my_topics', MyTopicsView.as_view(), name='my_topics'),
+    ])),
 ]

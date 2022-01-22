@@ -20,6 +20,9 @@
                     <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'profile' request.user.username %}'">Profile</li>
                 </ul>
                 <ul class="list-inline">
+                    <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'my_topics' request.user.username %}'">My Topics</li>
+                </ul>
+                <ul class="list-inline">
                     <li class="p-3" style="cursor: pointer" onclick="window.location.href='{% url 'room_reservations' request.user.username %}'">Reservation</li>
                 </ul>
             </div>
