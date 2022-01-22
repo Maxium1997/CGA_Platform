@@ -133,37 +133,9 @@ Ocean Station
 
     <div class="row">
         <div>
-            <p>{{ station.introductions|linebreaks|safe }}</p>
+            <p>{{ station.introductions|safe }}</p>
         </div>
     </div>
-
-<!--    {% if contents %}-->
-<!--    <div class="row">-->
-<!--        <div>-->
-<!--            {% for content in contents %}-->
-<!--            <p>{{ content.description|linebreaks|safe }}</p>-->
-<!--            {% endfor %}-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    {% endif %}-->
-
-<!--    {% if cautions %}-->
-<!--    <div class="row border-top pt-2">-->
-<!--        <h3>Cautions</h3>-->
-<!--        {% for caution in cautions %}-->
-<!--        <p>{{ caution.description|linebreaks|safe }}</p>-->
-<!--        {% endfor %}-->
-<!--    </div>-->
-<!--    {% endif %}-->
-
-<!--    {% if others %}-->
-<!--    <div class="row border-top pt-2">-->
-<!--        <h3>Others</h3>-->
-<!--        {% for other in others %}-->
-<!--        <p>{{ other.description|linebreaks|safe }}</p>-->
-<!--        {% endfor %}-->
-<!--    </div>-->
-<!--    {% endif %}-->
 
     {% if region_stations %}
     <div class="row justify-content-center border-top pt-2">

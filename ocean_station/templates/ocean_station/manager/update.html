@@ -56,6 +56,10 @@ Ocean Station
                             <td class="col-2 align-middle">Fans Page/Website</td>
                             <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ form.fans_page_url }}</a></td>
                         </tr>
+                        <tr>
+                            <td class="col-2 align-middle">Intro</td>
+                            <td class="col-10 align-middle"><a href="{{ station.fans_page_url }}">{{ form.media }}{{ form.introductions }}</a></td>
+                        </tr>
                         {% if traffic_info %}
                         <tr>
                             <td class="col-2">Traffic</td>
@@ -70,7 +74,6 @@ Ocean Station
                             <td colspan="2">
                                 <button type="submit" class="btn btn-primary">Update</button>
                                 <button type="button" class="btn btn-info" onclick="window.location.href='{% url 'station_info' station.slug %}'">View Info</button>
-                                <button type="button" class="btn btn-success" onclick="window.location.href='{% url 'station_contents' station.slug %}'">View Contents</button>
                                 <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'station_update' station.slug %}'"><i class="bi bi-arrow-clockwise"></i>Refresh</button>
                             </td>
                         </tr>

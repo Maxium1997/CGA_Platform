@@ -31,7 +31,8 @@ class StationUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Station
-        fields = ['name', 'manager', 'region', 'address', 'coordinate', 'contact_phone', 'fans_page_url']
+        fields = ['name', 'manager', 'region', 'address', 'coordinate', 'contact_phone', 'fans_page_url',
+                  'introductions']
 
 
 class ContentEditForm(forms.ModelForm):
