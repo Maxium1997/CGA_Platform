@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('tinymce/', include('tinymce.urls')),
     path('', include('registration.urls')),
     path('', include('ocean_station.urls')),
     path('', include('cga_booking.urls')),
