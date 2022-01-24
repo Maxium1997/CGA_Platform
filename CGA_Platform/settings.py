@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ckeditor',
+    'ckeditor_uploader',
     'qr_code',
     'tinymce',
     'registration',
@@ -129,11 +131,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static'),
-# ]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -149,3 +147,6 @@ SESSION_SERIALIZER = 'django.contrib.sessions.serializers' + '.PickleSerializer'
 
 EMAIL_HOST_USER = 'cgaplatform@gmail.com'
 EMAIL_HOST_PASSWORD = 'CGAplateform86925'
+
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
+CKEDITOR_UPLOAD_PATH = "uploads/"
