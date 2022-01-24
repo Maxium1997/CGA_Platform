@@ -1,8 +1,7 @@
 import os
 from django.db import models
 from django.urls import reverse_lazy
-from tinymce.models import HTMLField
-
+from ckeditor.fields import RichTextField
 # Create your models here.
 
 
@@ -29,9 +28,9 @@ class Case(models.Model):
     is_one_of = models.ForeignKey(CaseSection, on_delete=models.SET_NULL, null=True)
     serial_number = models.CharField(max_length=10, unique=True)
     title = models.CharField(max_length=255, unique=True, null=False)
-    legal_resources = HTMLField(default=None, null=True)
-    handling_point = HTMLField(default=None, null=True)
-    cautions = HTMLField(default=None, null=True)
+    legal_resources = RichTextField(default=None, null=True)
+    handling_point = RichTextField(default=None, null=True)
+    cautions = RichTextField(default=None, null=True)
     flow_chart = models.ImageField(upload_to=case_flow_chart_upload_path, null=True, blank=True)
 
     def get_absolute_url(self):
