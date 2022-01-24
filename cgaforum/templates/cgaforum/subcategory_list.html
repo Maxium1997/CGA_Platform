@@ -26,7 +26,7 @@ CGA Forum
                     <td class="pt-3 pb-3 text-center">{{ subcategory.topic_set.count }}</td>
                     <td class="pt-3 pb-3">
                         {% for topic in subcategory.get_latest_topics %}
-                        <p>{{ topic }}</p>
+                        <p></p><a href="{% url 'topic' topic.f.f.slug topic.f.slug topic.pk %}">{{ topic }}</a></p>
                         {% endfor %}
                     </td>
                 </tr>

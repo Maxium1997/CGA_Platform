@@ -6,9 +6,7 @@ CGA Forum
 {% endblock %}
 
 {% block breadcrumb %}
-<li class="breadcrumb-item"><a href="{% url 'cgaforum' %}">CGA Forum</a></li>
-<li class="breadcrumb-item"><a href="{% url 'subcategories' category.slug %}">{{ category }}</a></li>
-<li class="breadcrumb-item active" aria-current="page">{{ subcategory }}</li>
+<li class="breadcrumb-item active">CGA Forum</li>
 {% endblock %}
 
 {% block body %}
@@ -20,12 +18,13 @@ CGA Forum
                 <th class="col-2">Cate.</th>
                 <th class="col-1 text-center">replies</th>
                 <th class="col-2 text-center">Activity</th>
-                <th class="col-1 text-center"><button type="button" class="btn btn-primary" onclick="window.location.href='{% url 'topic_write' category.slug subcategory.slug %}'">Write</button></th>
+                <th class="col-1 text-center"></th>
             </thead>
             <tbody>
                 {% for topic in object_list %}
                 <tr>
                     <td class="pt-3 pb-3"><a href="{% url 'topic' topic.f.f.slug topic.f.slug topic.pk %}" class="text-decoration-none">{{ topic }}</a></td>
+                    <td class="pt-3 pb-3 text-center"><a href="{% url 'categories' %}">{{ topic.f.f }}</a> / <a href="{% url 'subcategories' topic.f.f.slug %}">{{ topic.f }}</a></td>
                     <td class="pt-3 pb-3 text-center">{{ topic.replies.all.count }}</td>
                     <td class="pt-3 pb-3 text-center">{{ topic.updated_time|date:"Y/m/d, H:i" }}</td>
                     <td class="pt-3 pb-3 text-center">

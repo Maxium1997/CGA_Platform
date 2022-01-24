@@ -15,6 +15,14 @@ class CategoriesView(ListView):
     model = Category
 
 
+class LatestTopicsView(ListView):
+    model = Topic
+    template_name = 'cgaforum/latest_topic_list.html'
+
+    def get_queryset(self):
+        return Topic.objects.all().order_by('-updated_time')
+
+
 class SubCategoriesView(ListView):
     model = SubCategory
 
