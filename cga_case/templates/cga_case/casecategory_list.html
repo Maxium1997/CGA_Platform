@@ -12,6 +12,13 @@ CGA Case
 {% block body %}
 <div class="container">
     <div class="row">
+        <div>
+            <form method="post" action="{% url 'case_search' %}">
+                {% csrf_token %}
+                {{ case_search_form.search_field }}
+            </form>
+        </div>
+
         {% for category in object_list %}
         <div class="col-12 pt-2 pb-2">
             <h3 class="fw-light" style="cursor:pointer; color: dark" onclick="window.location.href='{% url 'case_sections' category.name %}'">{{ category }}</h3>

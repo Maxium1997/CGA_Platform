@@ -1,18 +1,50 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, UpdateView, CreateView
 from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 
 
 from cga_case.models import CaseCategory, CaseSection, Case
+from cga_case.forms import CaseSearchForm
+from itertools import chain
+from collections import OrderedDict
 # Create your views here.
 
 
 class CaseCategoriesView(ListView):
     model = CaseCategory
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['case_search_form'] = CaseSearchForm()
+        return context
+
+
+def case_search(request):
+    case_search_form = CaseSearchForm(request.POST)
+    keyword = str(request.POST.get('search_field'))
+
+    filter_criteria = Q(name__icontains=keyword)
+    case_categories = CaseCategory.objects.filter(filter_criteria)
+
+    filter_criteria = Q(name__icontains=keyword)
+    case_sections = CaseSection.objects.filter(filter_criteria)
+
+    filter_criteria = Q(title__icontains=keyword) | Q(legal_resources__icontains=keyword) | \
+                      Q(handling_point__icontains=keyword) | Q(cautions__icontains=keyword)
+    cases = Case.objects.filter(filter_criteria)
+
+    context = {'case_search_form': case_search_form,
+               'keyword': keyword,
+               'case_categories': case_categories,
+               'case_sections': case_sections,
+               'cases': cases}
+
+    return render(request, template_name='cga_case/search_result.html', context=context)
 
 
 class CaseSectionsView(ListView):

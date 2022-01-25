@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load text_filters %}
+
+{% block title %}
+CGA Case
+{% endblock %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item"><a href="{% url 'cgacase' %}">CGA Case</a></li>
+<li class="breadcrumb-item active" aria-current="page">{{ keyword }}</li>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div>
+            <form method="post" action="{% url 'case_search' %}">
+                {% csrf_token %}
+                {{ case_search_form.search_field }}
+            </form>
+        </div>
+
+        {% for case_category in case_categories %}
+            <div class="card m-1 col-12" style="cursor: pointer" onclick="window.location.href='{% url 'case_sections' case_category.name  %}'">
+                <div class="card-body">
+                    {{ case_category|mark:keyword }}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% for case_section in case_sections %}
+            <div class="card m-1 col-12" style="cursor: pointer">
+                <div class="card-body">
+                    {{ case_section|mark:keyword }}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% for case in cases %}
+            <div class="card m-1 col-12" style="cursor: pointer" onclick="window.location.href='{% url 'case_detail' case.title %}'">
+                <div class="card-body">
+                    {{ case|mark:keyword }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
